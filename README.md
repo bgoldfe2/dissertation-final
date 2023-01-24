@@ -1,4 +1,4 @@
-# Explainable and Extensable Transfomer based Architecutre leveraging Synthetic Data Generation for the Automated Detection of Cyberbullying
+# Explainable and Extensible Transfomer based Architecutre leveraging Synthetic Data Generation for the Automated Detection of Cyberbullying
 
 ### Full Model Train
 
