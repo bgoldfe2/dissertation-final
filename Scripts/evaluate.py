@@ -38,7 +38,7 @@ def test_evaluate(test_df, test_data_loader, model, device, pretrained_model = a
 
     conf_mat = confusion_matrix(y_test,y_pred)
     print(conf_mat)
-    
+    # auc evaluation new for this version
     #ROC Curve
     calc_roc_auc(np.array(y_test), np.array(y_proba))
 
@@ -80,4 +80,4 @@ if __name__ == "__main__":
     test_evaluate(test_df, test_data_loader, bert, device, pretrained_model="bert-base-uncased")
     del bert, test_data_loader
     
-    
+# This new version has a different main which seems to just run BERT    

@@ -75,6 +75,8 @@ def test_eval_fn(data_loader, model, device, pretrained_model = args.pretrained_
     val_losses = []
     final_target = []
     final_output = []
+
+    # BHG this version adds in a final_probabilities for some reason as well as output
     final_probabilities = []
 
     with torch.no_grad():

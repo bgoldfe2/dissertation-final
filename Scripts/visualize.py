@@ -26,3 +26,5 @@ def save_loss_curves(history):
     plt.ylim([0, 1])
     plt.savefig(f"{args.figure_path}{args.pretrained_model}---loss---.pdf")
     plt.clf()
+
+# This version adds the plt.clf() command at the end

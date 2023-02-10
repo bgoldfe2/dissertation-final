@@ -30,9 +30,26 @@ def run():
     test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
 
     print(set(train_df.label.values))
-    print("train len - {}, valid len - {}, test len - {}".format(len(train_df), len(valid_df),len(test_df)))
+    print("train len - {}, valid len - {}, test len - {}".format(len(train_df),\
+     len(valid_df),len(test_df)))
+    for col in train_df.columns:
+        print(col)
+    print("train example text -- ",train_df.text[1],"\nwith target -- ",\
+     train_df.label[1])
 
+    # BHG Text encoding occurs at model instantiation  
     train_dataset = generate_dataset(train_df)
+    print("train_dataset object is of type -- ",type(train_dataset))
+    print("Print Encoded Token Byte tensor at location 1 -- ", train_dataset[1]['input_ids'])
+    
+    encoding = train_dataset[1]['input_ids']
+    print("The Decoded Token Text tensor is -- ",train_dataset.tokenizer.convert_ids_to_tokens(encoding))
+    
+
+
+    # Nov 30 afternoon stopping point
+    # Able to get the tokens out of the BertDataset object
+    
     train_data_loader = torch.utils.data.DataLoader(
         dataset = train_dataset,
         batch_size = args.train_batch_size,
@@ -56,11 +73,21 @@ def run():
     device = set_device()
 
     model = set_model()
-    print(f'Model Parameter Count: {count_model_parameters(model)}')
+    # BHG model type and number of parameters initial instantiation
+    print("Model Class: ", type(model), "Num Params: ",count_model_parameters(model))
     model = model.to(device)
-    # summary(model, (), 16)
-
+    
+    # BHG Model Paramter definition
     num_train_steps = int(len(train_df) / args.train_batch_size * args.epochs)
+
+    # print(model.named_parameters())
+    
+    # BHG definition of named_parameters from PyTorch documentation
+    # Returns an iterator over module parameters, yielding both the name 
+    #   of the parameter as well as the parameter itself.
+
+    # Weight_Decay: Manually setting the weight_decay of the model paramters based on the
+    # name of the parameter
 
     param_optimizer = list(model.named_parameters())
     no_decay = ["bias", "LayerNorm.bias", "LayerNorm.weight"]
@@ -78,6 +105,10 @@ def run():
             "weight_decay": 0.0,
         },
     ]
+
+    print (type(optimizer_parameters))
+    print (np.shape(optimizer_parameters))
+    asdf
     
     optimizer = AdamW(
         params = optimizer_parameters,
@@ -111,6 +142,7 @@ def run():
         history['val_acc'].append(val_acc)
         history['val_loss'].append(val_loss)
 
+        # SAVE MODEL if best so far going through epochs
         if val_acc>best_acc:
             torch.save(model.state_dict(), f"{args.model_path}{args.pretrained_model}_Best_Val_Acc.bin")
 

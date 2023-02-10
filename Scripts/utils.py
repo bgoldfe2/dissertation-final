@@ -44,7 +44,7 @@ def set_device():
 
 def sorting_function(val):
     return val[1]    
-
+# BHG This version removes the test_acc and the number from the filename
 def load_prediction():
     bert_path = (f'{args.output_path}bert-base-uncased.csv')
     xlnet_path = (f'{args.output_path}xlnet-base-cased.csv')
@@ -129,7 +129,7 @@ def load_models():
     gpt2.load_state_dict(torch.load(gpt2_path))
 
     return bert, xlnet, roberta, distilbert, gpt2
-
+# oneHot and calc_roc_auc are new for this version
 def oneHot(arr):
     b = np.zeros((arr.size, arr.max()+1))
     b[np.arange(arr.size),arr] = 1

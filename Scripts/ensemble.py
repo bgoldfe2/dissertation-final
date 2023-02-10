@@ -46,7 +46,7 @@ def max_vote():
     max_vote_df['gpt2'] = gpt2_pred
 
     # print_stats(max_vote_df, bert, xlnet, roberta, distilbert)
-
+    # BHG addtional lines into this function until line 88
     preds = []
 
     for index in range(len(max_vote_df)):
@@ -87,7 +87,7 @@ def max_vote3():
     max_vote_df['gpt2'] = gpt2_pred
 
     # print_stats(max_vote_df, bert, xlnet, roberta, distilbert)
-
+    # end of additional lines ? what changed?
     preds = []
 
     for index in range(len(max_vote_df)):
@@ -98,7 +98,7 @@ def max_vote3():
     max_vote_df['pred'] = preds
 
     evaluate_ensemble(max_vote_df)
-
+# BHG Added new function
 def rocauc():
     bert, xlnet, roberta, distilbert, gpt2 = load_models()
     test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
@@ -160,7 +160,7 @@ def averaging():
     test_data_loader = generate_dataset_for_ensembling(pretrained_model="distilbert-base-uncased", df=test_df)
     distilbert_output, target = test_eval_fn_ensemble(test_data_loader, distilbert, device, pretrained_model="distilbert-base-uncased")
     del distilbert, test_data_loader
-
+    # BHG a lot of extra code in here?
     gpt2.to(device)
     test_data_loader = generate_dataset_for_ensembling(pretrained_model="gpt2", df=test_df)
     gpt2_output, target = test_eval_fn_ensemble(test_data_loader, gpt2, device, pretrained_model="gpt2")
