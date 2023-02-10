@@ -68,16 +68,21 @@ def evaluate_all_models():
     del distilbert, test_data_loader
 
 if __name__ == "__main__":
-    bert_path = (f'{args.model_path}bert-base-uncased_Best_Val_Acc.bin')
-    bert = BertFGBC(pretrained_model="bert-base-uncased")
-    bert.load_state_dict(torch.load(bert_path))
-    
-    test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
-    device = set_device()
+    evaluate_all_models()
 
-    bert.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="bert-base-uncased", df =test_df)
-    test_evaluate(test_df, test_data_loader, bert, device, pretrained_model="bert-base-uncased")
-    del bert, test_data_loader
+
+
+    # BHG for some reason this main does not call evaluate_all_models
+    #bert_path = (f'{args.model_path}bert-base-uncased_Best_Val_Acc.bin')
+    #bert = BertFGBC(pretrained_model="bert-base-uncased")
+    #bert.load_state_dict(torch.load(bert_path))
+    
+    #test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
+    #device = set_device()
+
+    #bert.to(device)
+    #test_data_loader = generate_dataset_for_ensembling(pretrained_model="bert-base-uncased", df =test_df)
+    #test_evaluate(test_df, test_data_loader, bert, device, pretrained_model="bert-base-uncased")
+    #del bert, test_data_loader
     
 # This new version has a different main which seems to just run BERT    
