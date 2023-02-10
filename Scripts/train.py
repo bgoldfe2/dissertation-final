@@ -109,6 +109,19 @@ def run():
     print (type(optimizer_parameters))
     print (np.shape(optimizer_parameters))
     asdf
+
+    # As per the Kaggle On Stability of a Few-Samples tutorial you should not 
+    # Also blanket override the weight_decay if it is declared conditionaly in
+    # the optimizer_parameter dictionary
+    #https://www.kaggle.com/code/rhtsingh/on-stability-of-few-sample-transformer-fine-tuning
+    #
+    # optimizer = AdamW(
+    #     optimizer_grouped_parameters,
+    #     lr=lr,
+    #     eps=epsilon,
+    #     correct_bias=not use_bertadam # bias correction step - not needed default is True
+    # }
+)
     
     optimizer = AdamW(
         params = optimizer_parameters,
