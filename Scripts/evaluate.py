@@ -70,7 +70,9 @@ def evaluate_all_models():
 if __name__ == "__main__":
     evaluate_all_models()
 
-
+    # BHG I found out why - at the end of the training it just sends the last model already in memory on device
+    #     What they discovered below is that for 'testing' after the training you need to get the best model
+    #     not the last one run from the last epoch
 
     # BHG for some reason this main does not call evaluate_all_models
     #bert_path = (f'{args.model_path}bert-base-uncased_Best_Val_Acc.bin')

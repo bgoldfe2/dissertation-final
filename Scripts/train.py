@@ -108,7 +108,7 @@ def run():
 
     print (type(optimizer_parameters))
     print (np.shape(optimizer_parameters))
-    asdf
+    
 
     # As per the Kaggle On Stability of a Few-Samples tutorial you should not 
     # Also blanket override the weight_decay if it is declared conditionaly in
@@ -120,8 +120,10 @@ def run():
     #     lr=lr,
     #     eps=epsilon,
     #     correct_bias=not use_bertadam # bias correction step - not needed default is True
-    # }
-)
+    # )
+    # However in running a test the results came out exactly the same so it must be
+    # smart enough to know to use the weights correctly as defined in the optimizer_parameters
+    #
     
     optimizer = AdamW(
         params = optimizer_parameters,
@@ -157,7 +159,10 @@ def run():
 
         # SAVE MODEL if best so far going through epochs
         if val_acc>best_acc:
+            print(f'Epoch {epoch + 1} val_acc {val_acc} best_acc {best_acc}')
             torch.save(model.state_dict(), f"{args.model_path}{args.pretrained_model}_Best_Val_Acc.bin")
+            # BHG needed to set best_acc to val_acc this was missing in prior implementation
+            best_acc=val_acc
 
     print(f'\n---History---\n{history}')
     print("##################################### Testing ############################################")
