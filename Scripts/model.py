@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from transformers import BertModel, RobertaModel, XLNetModel, DistilBertModel, GPT2Model
+from transformers import BertModel, RobertaModel, XLNetModel, DistilBertModel, GPT2Model, DeBertaModel
 
 from common import get_parser
 
@@ -10,6 +10,39 @@ args = parser.parse_args()
 np.random.seed(args.seed)
 torch.manual_seed(args.seed)
 torch.cuda.manual_seed(args.seed)
+
+class DeBertaFGBC(nn.Module):
+    def __init__(self, pretrained_model = args.pretrained_model):
+        super().__init__()
+        self.DeBerta = DeBertaModel.from_pretrained(pretrained_model)
+        self.drop1 = nn.Dropout(args.dropout)
+        self.linear = nn.Linear(args.bert_hidden, 64)
+        self.batch_norm = nn.LayerNorm(64)
+        self.drop2 = nn.Dropout(args.dropout)
+        self.out = nn.Linear(64, args.classes)
+
+    def forward(self, input_ids, attention_mask, token_type_ids):
+        _,last_hidden_state = self.DeBerta(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            token_type_ids=token_type_ids,
+            return_dict=False
+        )
+        #print(f'Last Hidden State - {last_hidden_state.shape}')
+        bo = self.drop1(last_hidden_state)
+        #print(f'Dropout1 - {bo.shape}')
+        bo = self.linear(bo)
+        #print(f'Linear1 - {bo.shape}')
+        bo = self.batch_norm(bo)
+        #print(f'BatchNorm - {bo.shape}')
+        bo = nn.Tanh()(bo)
+        bo = self.drop2(bo)
+        #print(f'Dropout2 - {bo.shape}')
+
+        # the return are the values of the last linear layer for each category
+        output = self.out(bo)
+        #print(f'Output - {output.shape}')
+        return output
 
 class BertFGBC(nn.Module):
     def __init__(self, pretrained_model = args.pretrained_model):
