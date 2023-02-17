@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from transformers import BertModel, RobertaModel, XLNetModel, DistilBertModel, GPT2Model, DeBertaModel
+from transformers import BertModel, RobertaModel, XLNetModel, DistilBertModel, GPT2Model, DebertaModel
 
 from common import get_parser
 
