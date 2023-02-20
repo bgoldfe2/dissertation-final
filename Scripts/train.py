@@ -71,7 +71,7 @@ def run():
         shuffle = False
     )
     
-    device = set_device()
+    device = utils.set_device()
 
     model = set_model()
     # BHG model type and number of parameters initial instantiation
@@ -208,7 +208,7 @@ def generate_dataset(df):
         return DatasetXLNet(text=df.text.values, target=df.target.values)
     elif(args.pretrained_model == "distilbert-base-uncased"):
         return DatasetDistilBert(text=df.text.values, target=df.target.values)
-    elif(args.pretrained_model == "microsoft/deberta-v3-xsmall"):
+    elif(args.pretrained_model == "microsoft/deberta-v2-xlarge"):
         return DatasetDeberta(text=df.text.values, target=df.target.values)
 
 def set_model():
@@ -225,7 +225,7 @@ def set_model():
         return XLNetFGBC()
     elif(args.pretrained_model == "distilbert-base-uncased"):
         return DistilBertFGBC()
-    elif(args.pretrained_model == "distilbert-base-uncased"):
+    elif(args.pretrained_model == "microsoft/deberta-v2-xlarge"):
         return DeBertaFGBC()
 
 def count_model_parameters(model):

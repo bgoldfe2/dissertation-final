@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from transformers import BertModel, RobertaModel, XLNetModel, DistilBertModel, GPT2Model, DebertaModel
+from transformers import BertModel, RobertaModel, XLNetModel, DistilBertModel, GPT2Model, DebertaV2Model
 
 from common import get_parser
 
@@ -14,7 +14,7 @@ torch.cuda.manual_seed(args.seed)
 class DeBertaFGBC(nn.Module):
     def __init__(self, pretrained_model = args.pretrained_model):
         super().__init__()
-        self.DeBerta = DeBertaModel.from_pretrained(pretrained_model)
+        self.DeBerta = DebertaV2Model.from_pretrained(pretrained_model)
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.bert_hidden, 64)
         self.batch_norm = nn.LayerNorm(64)

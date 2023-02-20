@@ -1,6 +1,6 @@
 import torch
 import pandas as pd
-from transformers import BertTokenizer, RobertaTokenizer, XLNetTokenizer, DistilBertTokenizer, GPT2Tokenizer, DebertaTokenizer
+from transformers import BertTokenizer, RobertaTokenizer, XLNetTokenizer, DistilBertTokenizer, GPT2Tokenizer, DebertaV2Tokenizer
 import numpy as np
 
 
@@ -15,7 +15,7 @@ torch.cuda.manual_seed(args.seed)
 class DatasetDeberta:
     def __init__(self, text, target, pretrained_model = args.pretrained_model):
         self.text = text
-        self.tokenizer = DebertaTokenizer.from_pretrained(pretrained_model)
+        self.tokenizer = DebertaV2Tokenizer.from_pretrained(pretrained_model)
         self.max_length = args.max_length
         self.target = target
 
