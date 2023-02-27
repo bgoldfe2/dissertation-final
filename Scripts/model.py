@@ -21,14 +21,15 @@ class DeBertaFGBC(nn.Module):
         self.drop2 = nn.Dropout(args.dropout)
         self.out = nn.Linear(64, args.classes)
 
-    def forward(self, input_ids, attention_mask, token_type_ids):
-        _,last_hidden_state = self.DeBerta(
+    def forward(self, input_ids, attention_mask):
+        last_hidden_state = self.DeBerta(
             input_ids=input_ids,
             attention_mask=attention_mask,
-            token_type_ids=token_type_ids,
             return_dict=False
         )
-        #print(f'Last Hidden State - {last_hidden_state.shape}')
+        print(f'\n\nLast Hidden State Type - {type(last_hidden_state)}')
+        print(f'\n\nLast Hidden State Type - {last_hidden_state}')
+        
         bo = self.drop1(last_hidden_state)
         #print(f'Dropout1 - {bo.shape}')
         bo = self.linear(bo)
@@ -62,6 +63,8 @@ class BertFGBC(nn.Module):
             return_dict=False
         )
         #print(f'Last Hidden State - {last_hidden_state.shape}')
+        print(f'\n\nLast Hidden State Type - {type(last_hidden_state)}')
+        print(f'\n\nLast Hidden State Type - {last_hidden_state}')
         bo = self.drop1(last_hidden_state)
         #print(f'Dropout1 - {bo.shape}')
         bo = self.linear(bo)

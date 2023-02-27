@@ -81,7 +81,7 @@ def run():
     # BHG Model Paramter definition
     num_train_steps = int(len(train_df) / args.train_batch_size * args.epochs)
 
-    # print(model.named_parameters())
+    print(model.named_parameters())
     
     # BHG definition of named_parameters from PyTorch documentation
     # Returns an iterator over module parameters, yielding both the name 
@@ -107,8 +107,8 @@ def run():
         },
     ]
 
-    print (type(optimizer_parameters))
-    print (np.shape(optimizer_parameters))
+    print ('This is the type for the optimizer parameters - ',type(optimizer_parameters))
+    print ('This is the shape of the optimizer parameterss - ',np.shape(optimizer_parameters))
     
 
     # As per the Kaggle On Stability of a Few-Samples tutorial you should not 
