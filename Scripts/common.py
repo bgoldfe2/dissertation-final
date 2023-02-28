@@ -18,8 +18,8 @@ def get_parser():
     parser.add_argument("--device", type=str, default="gpu", help="Training device - cpu/gpu")
     parser.add_argument("--dataset", type=str, default="FGBC", help="Select Dataset - FGBC/Twitter")
 
-    parser.add_argument("--pretrained_model", default="microsoft/deberta-v2-xlarge", type=str, help='Name of the pretrained model')  #default="bert-base-uncased"
-    parser.add_argument("--deberta_hidden", default=768, type=int, help='Number of hidden states for DeBerta')
+    parser.add_argument("--pretrained_model", default="microsoft/deberta-v3-xsmall", type=str, help='Name of the pretrained model')  #default="bert-base-uncased"
+    parser.add_argument("--deberta_hidden", default=384, type=int, help='Number of hidden states for DeBerta')
     parser.add_argument("--bert_hidden", default=768, type=int, help='Number of hidden states for Bert')
     parser.add_argument("--gpt2_hidden", default=768, type=int, help='Number of hidden states for GPT2')
     parser.add_argument("--roberta_hidden", default=768, type=int, help='Number of hidden states for Roberta')
