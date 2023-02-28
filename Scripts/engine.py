@@ -117,7 +117,7 @@ def test_eval_fn_ensemble(data_loader, model, device, pretrained_model = args.pr
 def generate_output(data, model, device, pretrained_model = args.pretrained_model):
     #if(pretrained_model == "roberta-base" or pretrained_model == "distilbert-base-uncased" or pretrained_model == "gpt2"):
     if(pretrained_model == "roberta-base" or pretrained_model == "distilbert-base-uncased" or pretrained_model == "gpt2"\
-          or pretrained_model == "microsoft/deberta-v3-xsmall"):
+          or pretrained_model == "microsoft/deberta-v3-base"):
             input_ids = data["input_ids"]
             attention_mask = data["attention_mask"]
             target = data["target"]
