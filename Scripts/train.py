@@ -6,11 +6,12 @@ from collections import defaultdict
 import warnings
 
 import engine
-from model import BertFGBC, RobertaFGBC, XLNetFGBC, DistilBertFGBC, GPT2FGBC
-from dataset import DatasetBert, DatasetRoberta, DatasetXLNet, DatasetDistilBert, DatasetGPT2
+from model import BertFGBC, RobertaFGBC, XLNetFGBC, DistilBertFGBC, GPT2FGBC, DeBertaFGBC
+from dataset import DatasetBert, DatasetRoberta, DatasetXLNet, DatasetDistilBert, DatasetGPT2, DatasetDeberta
 from common import get_parser
 from evaluate import test_evaluate
-from utils import set_device
+
+import utils
 from visualize import save_acc_curves, save_loss_curves
 from dataset import train_validate_test_split
 
@@ -70,7 +71,7 @@ def run():
         shuffle = False
     )
     
-    device = set_device()
+    device = utils.set_device()
 
     model = set_model()
     # BHG model type and number of parameters initial instantiation
@@ -80,7 +81,7 @@ def run():
     # BHG Model Paramter definition
     num_train_steps = int(len(train_df) / args.train_batch_size * args.epochs)
 
-    # print(model.named_parameters())
+    print(model.named_parameters())
     
     # BHG definition of named_parameters from PyTorch documentation
     # Returns an iterator over module parameters, yielding both the name 
@@ -106,8 +107,8 @@ def run():
         },
     ]
 
-    print (type(optimizer_parameters))
-    print (np.shape(optimizer_parameters))
+    print ('This is the type for the optimizer parameters - ',type(optimizer_parameters))
+    print ('This is the shape of the optimizer parameterss - ',np.shape(optimizer_parameters))
     
 
     # As per the Kaggle On Stability of a Few-Samples tutorial you should not 
@@ -207,6 +208,8 @@ def generate_dataset(df):
         return DatasetXLNet(text=df.text.values, target=df.target.values)
     elif(args.pretrained_model == "distilbert-base-uncased"):
         return DatasetDistilBert(text=df.text.values, target=df.target.values)
+    elif(args.pretrained_model == "microsoft/deberta-v3-base"):
+        return DatasetDeberta(text=df.text.values, target=df.target.values)
 
 def set_model():
     # BHG debug
@@ -222,6 +225,8 @@ def set_model():
         return XLNetFGBC()
     elif(args.pretrained_model == "distilbert-base-uncased"):
         return DistilBertFGBC()
+    elif(args.pretrained_model == "microsoft/deberta-v3-base"):
+        return DeBertaFGBC()
 
 def count_model_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)

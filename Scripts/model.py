@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
-from transformers import BertModel, RobertaModel, XLNetModel, DistilBertModel, GPT2Model
+from transformers import BertModel, RobertaModel, XLNetModel, DistilBertModel, GPT2Model, DebertaV2Model
 
 from common import get_parser
 
@@ -10,6 +10,58 @@ args = parser.parse_args()
 np.random.seed(args.seed)
 torch.manual_seed(args.seed)
 torch.cuda.manual_seed(args.seed)
+
+class DeBertaFGBC(nn.Module):
+    def __init__(self, pretrained_model = args.pretrained_model):
+        super().__init__()
+        self.DeBerta = DebertaV2Model.from_pretrained(pretrained_model)
+        self.drop1 = nn.Dropout(args.dropout)
+        self.linear = nn.Linear(args.deberta_hidden, 64)
+        self.batch_norm = nn.LayerNorm(64)
+        self.drop2 = nn.Dropout(args.dropout)
+        self.out = nn.Linear(64, args.classes)
+
+    def forward(self, input_ids, attention_mask):
+        last_hidden_state = self.DeBerta(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            #output_hidden_states=True,
+            return_dict=False
+            #return_dict=True
+        )
+        #print(f'\n\nLast Hidden State Type - {type(last_hidden_state)}')
+        #print(f'\n\nLast Hidden State Type - {last_hidden_state}')
+
+        new_last_hidden_state = self.pool_hidden_state(last_hidden_state)
+        #mean_last_hidden_state = self.pool_hidden_state(last_hidden_state)
+        #print(f'\n\nLast New Hidden State Type - {type(new_last_hidden_state)}')
+        #print(f'\n\nLast New Hidden State Size - {new_last_hidden_state.shape}')
+        #print(f'\n\nLast New Hidden State Values - {new_last_hidden_state}')
+        
+        
+        bo = self.drop1(new_last_hidden_state)
+        #print(f'Dropout1 - {bo.shape}')
+        bo = self.linear(bo)
+        #print(f'Linear1 - {bo.shape}')
+        bo = self.batch_norm(bo)
+        #print(f'BatchNorm - {bo.shape}')
+        bo = nn.Tanh()(bo)
+        bo = self.drop2(bo)
+        #print(f'Dropout2 - {bo.shape}')
+
+        # the return are the values of the last linear layer for each category
+        output = self.out(bo)
+        #print(f'Output - {output.shape}')
+        return output
+
+    def pool_hidden_state(self, last_hidden_state):
+        tup_len = len(last_hidden_state)
+        #print('Last hidden state shape - ',tup_len)
+        tup_elem_lens = [len(a) for a in last_hidden_state]
+        #print('last hidden state element shapes - ',tup_elem_lens)
+        last_hidden_state = last_hidden_state[0]
+        mean_last_hidden_state = torch.mean(last_hidden_state, 1)
+        return mean_last_hidden_state    
 
 class BertFGBC(nn.Module):
     def __init__(self, pretrained_model = args.pretrained_model):
@@ -28,7 +80,11 @@ class BertFGBC(nn.Module):
             token_type_ids=token_type_ids,
             return_dict=False
         )
-        #print(f'Last Hidden State - {last_hidden_state.shape}')
+        print(f'Last Hidden State - {last_hidden_state.shape}')
+        print(f'\n\nLast Hidden State Type - {type(last_hidden_state)}')
+        print(f'\n\nLast Hidden State Type - {last_hidden_state}')
+        asdf
+        #bo = self.drop1(last_hidden_state)
         bo = self.drop1(last_hidden_state)
         #print(f'Dropout1 - {bo.shape}')
         bo = self.linear(bo)
