@@ -50,7 +50,7 @@ def load_prediction():
     xlnet_path = (f'{args.output_path}xlnet-base-cased.csv')
     roberta_path = (f'{args.output_path}roberta-base.csv')
     distilbert_path = (f'{args.output_path}distilbert-base-uncased.csv')
-    gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-1.3B.csv')
+    gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-125M.csv')
 
     deberta = pd.read_csv(deberta_path)
     xlnet = pd.read_csv(xlnet_path)
@@ -98,8 +98,8 @@ def generate_dataset_for_ensembling(pretrained_model, df):
         dataset = DatasetXLNet(text=df.text.values, target=df.target.values, pretrained_model="xlnet-base-cased")
     elif(pretrained_model == "distilbert-base-uncased"):
         dataset = DatasetDistilBert(text=df.text.values, target=df.target.values, pretrained_model="distilbert-base-uncased")
-    elif(pretrained_model == "gpt2"):
-        dataset = DatasetGPT_Neo(text=df.text.values, target=df.target.values, pretrained_model="EleutherAI/gpt-neo-1.3B")
+    elif(pretrained_model == "EleutherAI/gpt-neo-125M"):
+        dataset = DatasetGPT_Neo(text=df.text.values, target=df.target.values, pretrained_model="EleutherAI/gpt-neo-125M")
 
     data_loader = torch.utils.data.DataLoader(
         dataset = dataset,
@@ -114,13 +114,13 @@ def load_models():
     xlnet_path = (f'{args.model_path}xlnet-base-cased_Best_Val_Acc.bin')
     roberta_path = (f'{args.model_path}roberta-base_Best_Val_Acc.bin')
     distilbert_path = (f'{args.model_path}distilbert-base-uncased_Best_Val_Acc.bin')
-    gpt_neo_path = (f'{args.model_path}EleutherAI/gpt-neo-1.3B_Best_Val_Acc.bin')
+    gpt_neo_path = (f'{args.model_path}EleutherAI/gpt-neo-125M_Best_Val_Acc.bin')
 
     deberta = DeBertaFGBC(pretrained_model="bert-base-uncased")
     xlnet = XLNetFGBC(pretrained_model="xlnet-base-cased")
     roberta = RobertaFGBC(pretrained_model="roberta-base")
     distilbert = DistilBertFGBC(pretrained_model="distilbert-base-uncased")
-    gpt_neo = GPT_NeoFGBC(pretrained_model="EleutherAI/gpt-neo-1.3B")
+    gpt_neo = GPT_NeoFGBC(pretrained_model="EleutherAI/gpt-neo-125M")
 
     deberta.load_state_dict(torch.load(deberta_path))
     xlnet.load_state_dict(torch.load(xlnet_path))

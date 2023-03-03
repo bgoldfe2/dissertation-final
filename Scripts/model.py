@@ -69,7 +69,7 @@ class GPT_NeoFGBC(nn.Module):
         super().__init__()
         self.GPT2 = AutoModel.from_pretrained(pretrained_model)
         self.drop1 = nn.Dropout(args.dropout)
-        self.linear = nn.Linear(args.gpt2_hidden, 64)
+        self.linear = nn.Linear(args.gpt_neo_hidden, 64)
         self.batch_norm = nn.LayerNorm(64)
         self.drop2 = nn.Dropout(args.dropout)
         self.out = nn.Linear(64, args.classes)
