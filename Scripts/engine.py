@@ -115,9 +115,8 @@ def test_eval_fn_ensemble(data_loader, model, device, pretrained_model = args.pr
     return final_output, final_target
 
 def generate_output(data, model, device, pretrained_model = args.pretrained_model):
-    #if(pretrained_model == "roberta-base" or pretrained_model == "distilbert-base-uncased" or pretrained_model == "gpt2"):
-    if(pretrained_model == "roberta-base" or pretrained_model == "distilbert-base-uncased" or pretrained_model == "gpt2"\
-          or pretrained_model == "microsoft/deberta-v3-base"):
+    if(pretrained_model == "roberta-base" or pretrained_model == "distilbert-base-uncased" \
+          or pretrained_model == "EleutherAI/gpt-neo" or pretrained_model == "microsoft/deberta-v3-base"):
             input_ids = data["input_ids"]
             attention_mask = data["attention_mask"]
             target = data["target"]
@@ -129,9 +128,7 @@ def generate_output(data, model, device, pretrained_model = args.pretrained_mode
             model.zero_grad()
 
             output = model(input_ids=input_ids, attention_mask = attention_mask)
-    elif(pretrained_model == "bert-base-uncased" or pretrained_model == "xlnet-base-cased"):
-    #elif(pretrained_model == "bert-base-uncased" or pretrained_model == "xlnet-base-cased"\
-          #or pretrained_model == "microsoft/deberta-v2-xlarge"):
+    elif(pretrained_model == "xlnet-base-cased"):
         input_ids = data["input_ids"]
         attention_mask = data["attention_mask"]
         token_type_ids = data["token_type_ids"]

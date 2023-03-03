@@ -1,8 +1,7 @@
 import torch
 import pandas as pd
-from transformers import BertTokenizer, RobertaTokenizer, XLNetTokenizer, DistilBertTokenizer, GPT2Tokenizer, DebertaV2Tokenizer
 import numpy as np
-from transformers import AutoModelForSequenceClassification,AutoTokenizer
+from transformers import AutoTokenizer
 
 from common import get_parser
 parser = get_parser()
@@ -181,7 +180,7 @@ def train_validate_test_split(df, train_percent=0.6, validate_percent=.2, seed=7
 
 
 if __name__=="__main__":
-    tokenizer = AutoTokenizer.from_pretrained("gpt2")
+    tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo")
     print(tokenizer("Hello world"))
     
     df = pd.read_csv(args.dataset_path+"data.csv").dropna()
@@ -193,6 +192,6 @@ if __name__=="__main__":
     test_df.to_csv(args.dataset_path+'test.csv')
 
     print(set(df['label'].values))
-    dataset = DatasetBert(text=df.text.values, target=df.target.values)
+    dataset = DatasetGPT_Neo(text=df.text.values, target=df.target.values)
     print(df.iloc[1]['text'])
     print(dataset[1])
