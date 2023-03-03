@@ -2,6 +2,8 @@ import torch
 import pandas as pd
 from transformers import BertTokenizer, RobertaTokenizer, XLNetTokenizer, DistilBertTokenizer, GPT2Tokenizer, DebertaV2Tokenizer
 import numpy as np
+from transformers import AutoModelForSequenceClassification,AutoTokenizer
+tokz = AutoTokenizer.from_pretrained(model_nm)
 
 
 from common import get_parser
@@ -15,7 +17,7 @@ torch.cuda.manual_seed(args.seed)
 class DatasetDeberta:
     def __init__(self, text, target, pretrained_model = args.pretrained_model):
         self.text = text
-        self.tokenizer = DebertaV2Tokenizer.from_pretrained(pretrained_model)
+        self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.max_length = args.max_length
         self.target = target
 
@@ -48,7 +50,7 @@ class DatasetDeberta:
 class DatasetBert:
     def __init__(self, text, target, pretrained_model = args.pretrained_model):
         self.text = text
-        self.tokenizer = BertTokenizer.from_pretrained(pretrained_model)
+        self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.max_length = args.max_length
         self.target = target
 
@@ -80,7 +82,7 @@ class DatasetBert:
 class DatasetGPT2:
     def __init__(self, text, target, pretrained_model = args.pretrained_model):
         self.text = text
-        self.tokenizer = GPT2Tokenizer.from_pretrained(pretrained_model)
+        self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.tokenizer.pad_token = "[PAD]"
         self.max_length = args.max_length
         self.target = target
@@ -111,7 +113,7 @@ class DatasetGPT2:
 class DatasetRoberta:
     def __init__(self, text, target, pretrained_model = args.pretrained_model):
         self.text = text
-        self.tokenizer = RobertaTokenizer.from_pretrained(pretrained_model)
+        self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.max_length = args.max_length
         self.target = target
 
@@ -141,7 +143,7 @@ class DatasetRoberta:
 class DatasetDistilBert:
     def __init__(self, text, target, pretrained_model = args.pretrained_model):
         self.text = text
-        self.tokenizer = DistilBertTokenizer.from_pretrained(pretrained_model)
+        self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.max_length = args.max_length
         self.target = target
 
@@ -171,7 +173,7 @@ class DatasetDistilBert:
 class DatasetXLNet:
     def __init__(self, text, target, pretrained_model = args.pretrained_model):
         self.text = text
-        self.tokenizer = XLNetTokenizer.from_pretrained(pretrained_model)
+        self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.max_length = args.max_length
         self.target = target
 
@@ -213,7 +215,7 @@ def train_validate_test_split(df, train_percent=0.6, validate_percent=.2, seed=7
 
 
 if __name__=="__main__":
-    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+    tokenizer = AutoTokenizer.from_pretrained("gpt2")
     print(tokenizer("Hello world"))
     
     df = pd.read_csv(args.dataset_path+"data.csv").dropna()
