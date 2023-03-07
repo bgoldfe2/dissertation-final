@@ -23,7 +23,7 @@ def get_parser():
     parser.add_argument("--gpt_neo_hidden", default=768, type=int, help='Number of hidden states for GPT_Neo')
     parser.add_argument("--roberta_hidden", default=768, type=int, help='Number of hidden states for Roberta')
     parser.add_argument("--xlnet_hidden", default=768, type=int, help='Number of hidden states for XLNet')
-    parser.add_argument("--albert_hidden", default=768, type=int, help='Number of hidden states for Albert')
+    parser.add_argument("--albert_hidden", default=4096, type=int, help='Number of hidden states for Albert')
     parser.add_argument("--ensemble_type", type=str, default="max-voting", help="Ensemble type - max-voting or averaging")
 
     parser.add_argument("--dataset_path", default="../Dataset/SixClass/", type=str, help='Path to dataset file')

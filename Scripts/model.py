@@ -128,7 +128,7 @@ class RobertaFGBC(nn.Module):
 class AlbertFGBC(nn.Module):
     def __init__(self, pretrained_model = args.pretrained_model):
         super().__init__()
-        self.albert = AutoMOdel.from_pretrained(pretrained_model)
+        self.albert = AutoModel.from_pretrained(pretrained_model)
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.albert_hidden, 64)
         self.batch_norm = nn.LayerNorm(64)
