@@ -50,7 +50,7 @@ def load_prediction():
     xlnet_path = (f'{args.output_path}xlnet-base-cased.csv')
     roberta_path = (f'{args.output_path}roberta-base.csv')
     albert_path = (f'{args.output_path}albert-base-v2.csv')
-    gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-2.7B.csv')
+    gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-1.3B.csv')
 
     deberta = pd.read_csv(deberta_path)
     xlnet = pd.read_csv(xlnet_path)
@@ -98,8 +98,8 @@ def generate_dataset_for_ensembling(pretrained_model, df):
         dataset = DatasetXLNet(text=df.text.values, target=df.target.values, pretrained_model="xlnet-base-cased")
     elif(pretrained_model == "albert-base-v2"):
         dataset = DatasetAlbert(text=df.text.values, target=df.target.values, pretrained_model="albert-base-v2")
-    elif(pretrained_model == "EleutherAI/gpt-neo-2.7B"):
-        dataset = DatasetGPT_Neo(text=df.text.values, target=df.target.values, pretrained_model="EleutherAI/gpt-neo-2.7B")
+    elif(pretrained_model == "EleutherAI/gpt-neo-1.3B"):
+        dataset = DatasetGPT_Neo(text=df.text.values, target=df.target.values, pretrained_model="EleutherAI/gpt-neo-1.3B")
 
     data_loader = torch.utils.data.DataLoader(
         dataset = dataset,
@@ -114,13 +114,13 @@ def load_models():
     xlnet_path = (f'{args.model_path}xlnet-base-cased_Best_Val_Acc.bin')
     roberta_path = (f'{args.model_path}roberta-base_Best_Val_Acc.bin')
     albert_path = (f'{args.model_path}albert-base-v2_Best_Val_Acc.bin')
-    gpt_neo_path = (f'{args.model_path}EleutherAI/gpt-neo-2.7B_Best_Val_Acc.bin')
+    gpt_neo_path = (f'{args.model_path}EleutherAI/gpt-neo-1.3B_Best_Val_Acc.bin')
 
     deberta = DeBertaFGBC(pretrained_model="bert-base-uncased")
     xlnet = XLNetFGBC(pretrained_model="xlnet-base-cased")
     roberta = RobertaFGBC(pretrained_model="roberta-base")
     albert = AlbertFGBC(pretrained_model="albert-base-v2")
-    gpt_neo = GPT_NeoFGBC(pretrained_model="EleutherAI/gpt-neo-2.7B")
+    gpt_neo = GPT_NeoFGBC(pretrained_model="EleutherAI/gpt-neo-1.3B")
 
     deberta.load_state_dict(torch.load(deberta_path))
     xlnet.load_state_dict(torch.load(xlnet_path))

@@ -200,7 +200,7 @@ def create_dataset_files():
 def generate_dataset(df):
     if(args.pretrained_model == "microsoft/deberta-v3-base"):
         return DatasetDeberta(text=df.text.values, target=df.target.values)
-    elif(args.pretrained_model == "EleutherAI/gpt-neo-2.7B"):
+    elif(args.pretrained_model == "EleutherAI/gpt-neo-1.3B"):
         return DatasetGPT_Neo(text=df.text.values, target=df.target.values)
     elif(args.pretrained_model== "roberta-base"):
         return DatasetRoberta(text=df.text.values, target=df.target.values)
@@ -215,7 +215,7 @@ def set_model():
     
     if(args.pretrained_model == "microsoft/deberta-v3-base"):
         return DeBertaFGBC()
-    elif(args.pretrained_model == "EleutherAI/gpt-neo-2.7B"):
+    elif(args.pretrained_model == "EleutherAI/gpt-neo-1.3B"):
         return GPT_NeoFGBC()
     elif(args.pretrained_model == "roberta-base"):
         return RobertaFGBC()
