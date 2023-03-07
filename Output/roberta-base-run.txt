@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Model Class:  <class 'model.RobertaFGBC'> Num Params:  124695366
 <generator object Module.named_parameters at 0x7fe004ad4510>
 This is the type for the optimizer parameters -  <class 'list'>
@@ -64,4 +65,72 @@ weighted avg     0.8579    0.8592    0.8565      9541
  [  11    8   98  237 1224    7]
  [   2    5    4   30    6 1555]]
 ROC-AUC Score: 0.9859257166273425
+=======
+Model Class:  <class 'model.RobertaFGBC'> Num Params:  124695366
+<generator object Module.named_parameters at 0x7fe004ad4510>
+This is the type for the optimizer parameters -  <class 'list'>
+This is the shape of the optimizer parameterss -  (2,)
+---Starting Training---
+Epoch 1/4
+----------
+100% 895/895 [02:47<00:00,  5.36it/s, loss=0.905]
+Epoch 1 --- Training loss: 0.905075572189672 Training accuracy: 0.6677
+100% 299/299 [00:17<00:00, 16.99it/s]
+Epoch 1 --- Validation loss: 0.5254797123148289 Validation accuracy: 0.8201
+Epoch 1 val_acc 0.8201 best_acc 0.0
+Epoch 2/4
+----------
+100% 895/895 [02:42<00:00,  5.51it/s, loss=0.496]
+Epoch 2 --- Training loss: 0.49579548436170184 Training accuracy: 0.8411
+100% 299/299 [00:17<00:00, 17.06it/s]
+Epoch 2 --- Validation loss: 0.4463832981161848 Validation accuracy: 0.8427
+Epoch 2 val_acc 0.8427 best_acc 0.8201
+Epoch 3/4
+----------
+100% 895/895 [02:42<00:00,  5.51it/s, loss=0.408]
+Epoch 3 --- Training loss: 0.4083721331877415 Training accuracy: 0.8721
+100% 299/299 [00:17<00:00, 17.06it/s]
+Epoch 3 --- Validation loss: 0.4138684327088072 Validation accuracy: 0.8593
+Epoch 3 val_acc 0.8593 best_acc 0.8427
+Epoch 4/4
+----------
+100% 895/895 [02:42<00:00,  5.51it/s, loss=0.353]
+Epoch 4 --- Training loss: 0.3529299683161288 Training accuracy: 0.895
+100% 299/299 [00:17<00:00, 17.08it/s]
+Epoch 4 --- Validation loss: 0.41574801225526675 Validation accuracy: 0.8583
+
+---History---
+defaultdict(<class 'list'>, {'train_acc': [0.6677, 0.8411, 0.8721, 0.895], 'train_loss': [0.905075572189672, 0.49579548436170184, 0.4083721331877415, 0.3529299683161288], 'val_acc': [0.8201, 0.8427, 0.8593, 0.8583], 'val_loss': [0.5254797123148289, 0.4463832981161848, 0.4138684327088072, 0.41574801225526675]})
+##################################### Testing ############################################
+
+Evaluating: ---roberta-base---
+
+100% 299/299 [00:17<00:00, 17.00it/s]
+Output length --- 9541, Prediction length --- 9541
+Accuracy: 0.8592390734723824
+Mcc Score: 0.8320155267241146
+Precision: 0.857945703748898
+Recall: 0.8592390734723824
+F1_score: 0.8565190682312018
+classification_report:                precision    recall  f1-score   support
+
+           0     0.9821    0.9790    0.9806      1571
+           1     0.9823    0.9823    0.9823      1586
+           2     0.8614    0.8977    0.8792      1613
+           3     0.6989    0.5524    0.6171      1584
+           4     0.6729    0.7722    0.7192      1585
+           5     0.9499    0.9707    0.9602      1602
+
+    accuracy                         0.8592      9541
+   macro avg     0.8579    0.8591    0.8564      9541
+weighted avg     0.8579    0.8592    0.8565      9541
+
+[[1538    2    3   16   11    1]
+ [   2 1558    6    6    9    5]
+ [   0    3 1448   88   71    3]
+ [  13   10  122  875  498   66]
+ [  11    8   98  237 1224    7]
+ [   2    5    4   30    6 1555]]
+ROC-AUC Score: 0.9859257166273425
+>>>>>>> 182472fbe2cde27ac0b2f0a68d7ac4c40f163036
 ##################################### Task End ############################################
