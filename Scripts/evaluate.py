@@ -64,8 +64,8 @@ def evaluate_all_models():
     del roberta, test_data_loader
 
     albert.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="albert-xxlarge-v2", df=test_df)
-    test_evaluate(test_df, test_data_loader, albert, device, pretrained_model="albert-xxlarge-v2")
+    test_data_loader = generate_dataset_for_ensembling(pretrained_model="albert-base-v2", df=test_df)
+    test_evaluate(test_df, test_data_loader, albert, device, pretrained_model="albert-base-v2")
     del albert, test_data_loader
 
 if __name__ == "__main__":

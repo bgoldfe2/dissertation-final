@@ -206,7 +206,7 @@ def generate_dataset(df):
         return DatasetRoberta(text=df.text.values, target=df.target.values)
     elif(args.pretrained_model== "xlnet-base-cased"):
         return DatasetXLNet(text=df.text.values, target=df.target.values)
-    elif(args.pretrained_model == "albert-xxlarge-v2"):
+    elif(args.pretrained_model == "albert-base-v2"):
         return DatasetAlbert(text=df.text.values, target=df.target.values)
 
 def set_model():
@@ -221,7 +221,7 @@ def set_model():
         return RobertaFGBC()
     elif(args.pretrained_model == "xlnet-base-cased"):
         return XLNetFGBC()
-    elif(args.pretrained_model == "albert-xxlarge-v2"):
+    elif(args.pretrained_model == "albert-base-v2"):
         return AlbertFGBC()
 
 def count_model_parameters(model):

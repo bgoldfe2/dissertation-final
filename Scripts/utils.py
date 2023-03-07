@@ -49,7 +49,7 @@ def load_prediction():
     deberta_path = (f'{args.output_path}microsoft/deberta_v3_base.csv')
     xlnet_path = (f'{args.output_path}xlnet-base-cased.csv')
     roberta_path = (f'{args.output_path}roberta-base.csv')
-    albert_path = (f'{args.output_path}albert-xxlarge-v2.csv')
+    albert_path = (f'{args.output_path}albert-base-v2.csv')
     gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-125M.csv')
 
     deberta = pd.read_csv(deberta_path)
@@ -96,8 +96,8 @@ def generate_dataset_for_ensembling(pretrained_model, df):
         dataset = DatasetRoberta(text=df.text.values, target=df.target.values, pretrained_model="roberta-base")
     elif(pretrained_model== "xlnet-base-cased"):
         dataset = DatasetXLNet(text=df.text.values, target=df.target.values, pretrained_model="xlnet-base-cased")
-    elif(pretrained_model == "albert-xxlarge-v2"):
-        dataset = DatasetAlbert(text=df.text.values, target=df.target.values, pretrained_model="albert-xxlarge-v2")
+    elif(pretrained_model == "albert-base-v2"):
+        dataset = DatasetAlbert(text=df.text.values, target=df.target.values, pretrained_model="albert-base-v2")
     elif(pretrained_model == "EleutherAI/gpt-neo-125M"):
         dataset = DatasetGPT_Neo(text=df.text.values, target=df.target.values, pretrained_model="EleutherAI/gpt-neo-125M")
 
@@ -113,13 +113,13 @@ def load_models():
     deberta_path = (f'{args.model_path}bert-base-uncased_Best_Val_Acc.bin')
     xlnet_path = (f'{args.model_path}xlnet-base-cased_Best_Val_Acc.bin')
     roberta_path = (f'{args.model_path}roberta-base_Best_Val_Acc.bin')
-    albert_path = (f'{args.model_path}albert-xxlarge-v2_Best_Val_Acc.bin')
+    albert_path = (f'{args.model_path}albert-base-v2_Best_Val_Acc.bin')
     gpt_neo_path = (f'{args.model_path}EleutherAI/gpt-neo-125M_Best_Val_Acc.bin')
 
     deberta = DeBertaFGBC(pretrained_model="bert-base-uncased")
     xlnet = XLNetFGBC(pretrained_model="xlnet-base-cased")
     roberta = RobertaFGBC(pretrained_model="roberta-base")
-    albert = AlbertFGBC(pretrained_model="albert-xxlarge-v2")
+    albert = AlbertFGBC(pretrained_model="albert-base-v2")
     gpt_neo = GPT_NeoFGBC(pretrained_model="EleutherAI/gpt-neo-125M")
 
     deberta.load_state_dict(torch.load(deberta_path))

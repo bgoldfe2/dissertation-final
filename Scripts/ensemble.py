@@ -124,8 +124,8 @@ def rocauc():
     del roberta, test_data_loader
 
     albert.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="albert-xxlarge-v2", df=test_df)
-    y_pred, y_test, y_proba = test_eval_fn(test_data_loader, albert, device, pretrained_model="albert-xxlarge-v2")
+    test_data_loader = generate_dataset_for_ensembling(pretrained_model="albert-base-v2", df=test_df)
+    y_pred, y_test, y_proba = test_eval_fn(test_data_loader, albert, device, pretrained_model="albert-base-v2")
     calc_roc_auc(np.array(y_test), np.array(y_proba), name='albert')
     del albert, test_data_loader
 
@@ -158,8 +158,8 @@ def averaging():
     del roberta, test_data_loader
 
     albert.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="albert-xxlarge-v2", df=test_df)
-    albert_output, target = test_eval_fn_ensemble(test_data_loader, albert, device, pretrained_model="albert-xxlarge-v2")
+    test_data_loader = generate_dataset_for_ensembling(pretrained_model="albert-base-v2", df=test_df)
+    albert_output, target = test_eval_fn_ensemble(test_data_loader, albert, device, pretrained_model="albert-base-v2")
     del albert, test_data_loader
     # BHG a lot of extra code in here?
     gpt2.to(device)
