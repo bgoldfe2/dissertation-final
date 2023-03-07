@@ -125,18 +125,18 @@ class RobertaFGBC(nn.Module):
 
         return output
 
-class DistilBertFGBC(nn.Module):
+class AlbertFGBC(nn.Module):
     def __init__(self, pretrained_model = args.pretrained_model):
         super().__init__()
-        self.DistilBert = AutoMOdel.from_pretrained(pretrained_model)
+        self.albert = AutoMOdel.from_pretrained(pretrained_model)
         self.drop1 = nn.Dropout(args.dropout)
-        self.linear = nn.Linear(args.distilbert_hidden, 64)
+        self.linear = nn.Linear(args.albert_hidden, 64)
         self.batch_norm = nn.LayerNorm(64)
         self.drop2 = nn.Dropout(args.dropout)
         self.out = nn.Linear(64, args.classes)
 
     def forward(self, input_ids, attention_mask):
-        last_hidden_state = self.DistilBert(
+        last_hidden_state = self.albert(
             input_ids=input_ids,
             attention_mask=attention_mask,
             return_dict=False

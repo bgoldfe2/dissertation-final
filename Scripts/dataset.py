@@ -105,7 +105,7 @@ class DatasetRoberta:
             "target":torch.tensor(self.target[item], dtype = torch.long)
         }
 
-class DatasetDistilBert:
+class DatasetAlbert:
     def __init__(self, text, target, pretrained_model = args.pretrained_model):
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
@@ -166,6 +166,7 @@ class DatasetXLNet:
             "token_type_ids":torch.tensor(token_type_ids, dtype = torch.long),
             "target":torch.tensor(self.target[item], dtype = torch.long)
         }
+    
 # new version has seed set to 7 not 42 and not to None which is in earlier version
 def train_validate_test_split(df, train_percent=0.6, validate_percent=.2, seed=7):
     np.random.seed(seed)

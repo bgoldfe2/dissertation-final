@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc
 
 from common import get_parser
-from model import DeBertaFGBC, RobertaFGBC, XLNetFGBC, DistilBertFGBC, GPT_NeoFGBC
-from dataset import DatasetDeberta, DatasetRoberta, DatasetXLNet, DatasetDistilBert, DatasetGPT_Neo
+from model import DeBertaFGBC, RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC
+from dataset import DatasetDeberta, DatasetRoberta, DatasetXLNet, DatasetAlbert, DatasetGPT_Neo
 
 parser = get_parser()
 args = parser.parse_args()
@@ -49,24 +49,24 @@ def load_prediction():
     deberta_path = (f'{args.output_path}microsoft/deberta_v3_base.csv')
     xlnet_path = (f'{args.output_path}xlnet-base-cased.csv')
     roberta_path = (f'{args.output_path}roberta-base.csv')
-    distilbert_path = (f'{args.output_path}distilbert-base-uncased.csv')
+    albert_path = (f'{args.output_path}albert-xxlarge-v2.csv')
     gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-125M.csv')
 
     deberta = pd.read_csv(deberta_path)
     xlnet = pd.read_csv(xlnet_path)
     roberta = pd.read_csv(roberta_path)
-    distilbert = pd.read_csv(distilbert_path)
+    albert = pd.read_csv(albert_path)
     gpt_neo = pd.read_csv(gpt_neo_path)
 
-    return deberta, xlnet, roberta, distilbert, gpt_neo
+    return deberta, xlnet, roberta, albert, gpt_neo
 
-def print_stats(max_vote_df, deberta, xlnet, roberta, distilbert):
+def print_stats(max_vote_df, deberta, xlnet, roberta, albert):
     print(max_vote_df.head())
     print(f'---Ground Truth---\n{deberta.target.value_counts()}')
     print(f'---Bert---\n{deberta.y_pred.value_counts()}')
     print(f'---XLNet---\n{xlnet.y_pred.value_counts()}')
     print(f'---Roberta---\n{roberta.y_pred.value_counts()}')
-    print(f'---DistilBert---\n{distilbert.y_pred.value_counts()}')
+    print(f'---albert---\n{albert.y_pred.value_counts()}')
 
 def evaluate_ensemble(max_vote_df):
     y_test = max_vote_df['target'].values
@@ -96,8 +96,8 @@ def generate_dataset_for_ensembling(pretrained_model, df):
         dataset = DatasetRoberta(text=df.text.values, target=df.target.values, pretrained_model="roberta-base")
     elif(pretrained_model== "xlnet-base-cased"):
         dataset = DatasetXLNet(text=df.text.values, target=df.target.values, pretrained_model="xlnet-base-cased")
-    elif(pretrained_model == "distilbert-base-uncased"):
-        dataset = DatasetDistilBert(text=df.text.values, target=df.target.values, pretrained_model="distilbert-base-uncased")
+    elif(pretrained_model == "albert-xxlarge-v2"):
+        dataset = DatasetAlbert(text=df.text.values, target=df.target.values, pretrained_model="albert-xxlarge-v2")
     elif(pretrained_model == "EleutherAI/gpt-neo-125M"):
         dataset = DatasetGPT_Neo(text=df.text.values, target=df.target.values, pretrained_model="EleutherAI/gpt-neo-125M")
 
@@ -113,22 +113,22 @@ def load_models():
     deberta_path = (f'{args.model_path}bert-base-uncased_Best_Val_Acc.bin')
     xlnet_path = (f'{args.model_path}xlnet-base-cased_Best_Val_Acc.bin')
     roberta_path = (f'{args.model_path}roberta-base_Best_Val_Acc.bin')
-    distilbert_path = (f'{args.model_path}distilbert-base-uncased_Best_Val_Acc.bin')
+    albert_path = (f'{args.model_path}albert-xxlarge-v2_Best_Val_Acc.bin')
     gpt_neo_path = (f'{args.model_path}EleutherAI/gpt-neo-125M_Best_Val_Acc.bin')
 
     deberta = DeBertaFGBC(pretrained_model="bert-base-uncased")
     xlnet = XLNetFGBC(pretrained_model="xlnet-base-cased")
     roberta = RobertaFGBC(pretrained_model="roberta-base")
-    distilbert = DistilBertFGBC(pretrained_model="distilbert-base-uncased")
+    albert = AlbertFGBC(pretrained_model="albert-xxlarge-v2")
     gpt_neo = GPT_NeoFGBC(pretrained_model="EleutherAI/gpt-neo-125M")
 
     deberta.load_state_dict(torch.load(deberta_path))
     xlnet.load_state_dict(torch.load(xlnet_path))
     roberta.load_state_dict(torch.load(roberta_path))
-    distilbert.load_state_dict(torch.load(distilbert_path))
+    albert.load_state_dict(torch.load(albert_path))
     gpt_neo.load_state_dict(torch.load(gpt_neo_path))
 
-    return deberta, xlnet, roberta, distilbert, gpt_neo
+    return deberta, xlnet, roberta, albert, gpt_neo
 
 def oneHot(arr):
     b = np.zeros((arr.size, arr.max()+1))

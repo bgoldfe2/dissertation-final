@@ -9,7 +9,7 @@ list_scripts = ["--pretrained_model bert-base-uncased", \
                 "--pretrained_model gpt2", \
                 "--pretrained_model roberta-base", \
                 "--pretrained_model xlnet-base-cased", \
-                "--pretrained_model distilbert-base-uncased"] 
+                "--pretrained_model albert-xxlarge-v2"] 
  
 for script in list_scripts: 
 	__ = os.system("python train.py --split 'no' " + script) 
