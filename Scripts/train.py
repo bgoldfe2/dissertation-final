@@ -107,8 +107,8 @@ def run():
         },
     ]
 
-    print ('This is the type for the optimizer parameters - ',type(optimizer_parameters))
-    print ('This is the shape of the optimizer parameterss - ',np.shape(optimizer_parameters))
+    #print ('This is the type for the optimizer parameters - ',type(optimizer_parameters))
+    #print ('This is the shape of the optimizer parameterss - ',np.shape(optimizer_parameters))
     
 
     # As per the Kaggle On Stability of a Few-Samples tutorial you should not 

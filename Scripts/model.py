@@ -80,10 +80,10 @@ class BertFGBC(nn.Module):
             token_type_ids=token_type_ids,
             return_dict=False
         )
-        print(f'Last Hidden State - {last_hidden_state.shape}')
-        print(f'\n\nLast Hidden State Type - {type(last_hidden_state)}')
-        print(f'\n\nLast Hidden State Type - {last_hidden_state}')
-        asdf
+        #print(f'Last Hidden State - {last_hidden_state.shape}')
+        #print(f'\n\nLast Hidden State Type - {type(last_hidden_state)}')
+        #print(f'\n\nLast Hidden State Type - {last_hidden_state}')
+        
         #bo = self.drop1(last_hidden_state)
         bo = self.drop1(last_hidden_state)
         #print(f'Dropout1 - {bo.shape}')
