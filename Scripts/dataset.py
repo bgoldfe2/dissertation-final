@@ -181,7 +181,7 @@ def train_validate_test_split(df, train_percent=0.6, validate_percent=.2, seed=7
 
 
 if __name__=="__main__":
-    tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-1.3B")
+    tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-125M")
     print(tokenizer("Hello world"))
     
     df = pd.read_csv(args.dataset_path+"data.csv").dropna()
