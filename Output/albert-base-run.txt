@@ -1,0 +1,137 @@
+<<<<<<< HEAD
+Model Class:  <class 'model.AlbertFGBC'> Num Params:  11733318
+<generator object Module.named_parameters at 0x7f4268bb4350>
+This is the type for the optimizer parameters -  <class 'list'>
+This is the shape of the optimizer parameterss -  (2,)
+---Starting Training---
+Epoch 1/4
+----------
+100% 895/895 [02:43<00:00,  5.49it/s, loss=0.975]
+Epoch 1 --- Training loss: 0.9744327670369068 Training accuracy: 0.6474
+100% 299/299 [00:19<00:00, 15.24it/s]
+Epoch 1 --- Validation loss: 0.6010549424284677 Validation accuracy: 0.7994
+Epoch 1 val_acc 0.7994 best_acc 0.0
+Epoch 2/4
+----------
+100% 895/895 [02:40<00:00,  5.56it/s, loss=0.544]
+Epoch 2 --- Training loss: 0.5436858235790742 Training accuracy: 0.8208
+100% 299/299 [00:18<00:00, 15.74it/s]
+Epoch 2 --- Validation loss: 0.480665871082341 Validation accuracy: 0.8229
+Epoch 2 val_acc 0.8229 best_acc 0.7994
+Epoch 3/4
+----------
+100% 895/895 [02:40<00:00,  5.56it/s, loss=0.448]
+Epoch 3 --- Training loss: 0.44830617468450323 Training accuracy: 0.8534
+100% 299/299 [00:18<00:00, 15.76it/s]
+Epoch 3 --- Validation loss: 0.4394111489272835 Validation accuracy: 0.8452
+Epoch 3 val_acc 0.8452 best_acc 0.8229
+Epoch 4/4
+----------
+100% 895/895 [02:40<00:00,  5.56it/s, loss=0.385]
+Epoch 4 --- Training loss: 0.3847747478571684 Training accuracy: 0.8811
+100% 299/299 [00:18<00:00, 15.76it/s]
+Epoch 4 --- Validation loss: 0.4347099432080087 Validation accuracy: 0.845
+
+---History---
+defaultdict(<class 'list'>, {'train_acc': [0.6474, 0.8208, 0.8534, 0.8811], 'train_loss': [0.9744327670369068, 0.5436858235790742, 0.44830617468450323, 0.3847747478571684], 'val_acc': [0.7994, 0.8229, 0.8452, 0.845], 'val_loss': [0.6010549424284677, 0.480665871082341, 0.4394111489272835, 0.4347099432080087]})
+##################################### Testing ############################################
+
+Evaluating: ---albert-base-v2---
+
+100% 299/299 [00:19<00:00, 15.23it/s]
+Output length --- 9541, Prediction length --- 9541
+Accuracy: 0.8452992348810398
+Mcc Score: 0.8147505790902232
+Precision: 0.8468720895130206
+Recall: 0.8452992348810398
+F1_score: 0.8453214966960259
+classification_report:                precision    recall  f1-score   support
+
+           0     0.9840    0.9815    0.9828      1571
+           1     0.9830    0.9868    0.9849      1586
+           2     0.8752    0.8438    0.8592      1613
+           3     0.6367    0.5764    0.6050      1584
+           4     0.6430    0.7306    0.6840      1585
+           5     0.9585    0.9526    0.9555      1602
+
+    accuracy                         0.8453      9541
+   macro avg     0.8468    0.8453    0.8452      9541
+weighted avg     0.8469    0.8453    0.8453      9541
+
+[[1542    1    2   17    8    1]
+ [   0 1565    4    5    8    4]
+ [   1    6 1361  132  105    8]
+ [  14    6   91  913  513   47]
+ [   9    8   89  315 1158    6]
+ [   1    6    8   52    9 1526]]
+ROC-AUC Score: 0.9841490980387151
+##################################### Task End ############################################
+=======
+Model Class:  <class 'model.AlbertFGBC'> Num Params:  11733318
+<generator object Module.named_parameters at 0x7f4268bb4350>
+This is the type for the optimizer parameters -  <class 'list'>
+This is the shape of the optimizer parameterss -  (2,)
+---Starting Training---
+Epoch 1/4
+----------
+100% 895/895 [02:43<00:00,  5.49it/s, loss=0.975]
+Epoch 1 --- Training loss: 0.9744327670369068 Training accuracy: 0.6474
+100% 299/299 [00:19<00:00, 15.24it/s]
+Epoch 1 --- Validation loss: 0.6010549424284677 Validation accuracy: 0.7994
+Epoch 1 val_acc 0.7994 best_acc 0.0
+Epoch 2/4
+----------
+100% 895/895 [02:40<00:00,  5.56it/s, loss=0.544]
+Epoch 2 --- Training loss: 0.5436858235790742 Training accuracy: 0.8208
+100% 299/299 [00:18<00:00, 15.74it/s]
+Epoch 2 --- Validation loss: 0.480665871082341 Validation accuracy: 0.8229
+Epoch 2 val_acc 0.8229 best_acc 0.7994
+Epoch 3/4
+----------
+100% 895/895 [02:40<00:00,  5.56it/s, loss=0.448]
+Epoch 3 --- Training loss: 0.44830617468450323 Training accuracy: 0.8534
+100% 299/299 [00:18<00:00, 15.76it/s]
+Epoch 3 --- Validation loss: 0.4394111489272835 Validation accuracy: 0.8452
+Epoch 3 val_acc 0.8452 best_acc 0.8229
+Epoch 4/4
+----------
+100% 895/895 [02:40<00:00,  5.56it/s, loss=0.385]
+Epoch 4 --- Training loss: 0.3847747478571684 Training accuracy: 0.8811
+100% 299/299 [00:18<00:00, 15.76it/s]
+Epoch 4 --- Validation loss: 0.4347099432080087 Validation accuracy: 0.845
+
+---History---
+defaultdict(<class 'list'>, {'train_acc': [0.6474, 0.8208, 0.8534, 0.8811], 'train_loss': [0.9744327670369068, 0.5436858235790742, 0.44830617468450323, 0.3847747478571684], 'val_acc': [0.7994, 0.8229, 0.8452, 0.845], 'val_loss': [0.6010549424284677, 0.480665871082341, 0.4394111489272835, 0.4347099432080087]})
+##################################### Testing ############################################
+
+Evaluating: ---albert-base-v2---
+
+100% 299/299 [00:19<00:00, 15.23it/s]
+Output length --- 9541, Prediction length --- 9541
+Accuracy: 0.8452992348810398
+Mcc Score: 0.8147505790902232
+Precision: 0.8468720895130206
+Recall: 0.8452992348810398
+F1_score: 0.8453214966960259
+classification_report:                precision    recall  f1-score   support
+
+           0     0.9840    0.9815    0.9828      1571
+           1     0.9830    0.9868    0.9849      1586
+           2     0.8752    0.8438    0.8592      1613
+           3     0.6367    0.5764    0.6050      1584
+           4     0.6430    0.7306    0.6840      1585
+           5     0.9585    0.9526    0.9555      1602
+
+    accuracy                         0.8453      9541
+   macro avg     0.8468    0.8453    0.8452      9541
+weighted avg     0.8469    0.8453    0.8453      9541
+
+[[1542    1    2   17    8    1]
+ [   0 1565    4    5    8    4]
+ [   1    6 1361  132  105    8]
+ [  14    6   91  913  513   47]
+ [   9    8   89  315 1158    6]
+ [   1    6    8   52    9 1526]]
+ROC-AUC Score: 0.9841490980387151
+##################################### Task End ############################################
+>>>>>>> 182472fbe2cde27ac0b2f0a68d7ac4c40f163036

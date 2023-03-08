@@ -6,8 +6,8 @@ from collections import defaultdict
 import warnings
 
 import engine
-from model import BertFGBC, RobertaFGBC, XLNetFGBC, DistilBertFGBC, GPT2FGBC, DeBertaFGBC
-from dataset import DatasetBert, DatasetRoberta, DatasetXLNet, DatasetDistilBert, DatasetGPT2, DatasetDeberta
+from model import RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, DeBertaFGBC
+from dataset import DatasetRoberta, DatasetXLNet, DatasetAlbert, DatasetGPT_Neo, DatasetDeberta
 from common import get_parser
 from evaluate import test_evaluate
 
@@ -49,7 +49,7 @@ def run():
 
 
     # Nov 30 afternoon stopping point
-    # Able to get the tokens out of the BertDataset object
+    # Able to get the tokens out of the Dataset object
     
     train_data_loader = torch.utils.data.DataLoader(
         dataset = train_dataset,
@@ -198,35 +198,31 @@ def create_dataset_files():
 
 
 def generate_dataset(df):
-    if(args.pretrained_model == "bert-base-uncased"):
-        return DatasetBert(text=df.text.values, target=df.target.values)
-    elif(args.pretrained_model == "gpt2"):
-        return DatasetGPT2(text=df.text.values, target=df.target.values)
+    if(args.pretrained_model == "microsoft/deberta-v3-base"):
+        return DatasetDeberta(text=df.text.values, target=df.target.values)
+    elif(args.pretrained_model == "EleutherAI/gpt-neo-125M"):
+        return DatasetGPT_Neo(text=df.text.values, target=df.target.values)
     elif(args.pretrained_model== "roberta-base"):
         return DatasetRoberta(text=df.text.values, target=df.target.values)
     elif(args.pretrained_model== "xlnet-base-cased"):
         return DatasetXLNet(text=df.text.values, target=df.target.values)
-    elif(args.pretrained_model == "distilbert-base-uncased"):
-        return DatasetDistilBert(text=df.text.values, target=df.target.values)
-    elif(args.pretrained_model == "microsoft/deberta-v3-base"):
-        return DatasetDeberta(text=df.text.values, target=df.target.values)
+    elif(args.pretrained_model == "albert-base-v2"):
+        return DatasetAlbert(text=df.text.values, target=df.target.values)
 
 def set_model():
     # BHG debug
     print("The model in the args is ", args.pretrained_model)
     
-    if(args.pretrained_model == "bert-base-uncased"):
-        return BertFGBC()
-    elif(args.pretrained_model == "gpt2"):
-        return GPT2FGBC()
+    if(args.pretrained_model == "microsoft/deberta-v3-base"):
+        return DeBertaFGBC()
+    elif(args.pretrained_model == "EleutherAI/gpt-neo-125M"):
+        return GPT_NeoFGBC()
     elif(args.pretrained_model == "roberta-base"):
         return RobertaFGBC()
     elif(args.pretrained_model == "xlnet-base-cased"):
         return XLNetFGBC()
-    elif(args.pretrained_model == "distilbert-base-uncased"):
-        return DistilBertFGBC()
-    elif(args.pretrained_model == "microsoft/deberta-v3-base"):
-        return DeBertaFGBC()
+    elif(args.pretrained_model == "albert-base-v2"):
+        return AlbertFGBC()
 
 def count_model_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
