@@ -144,7 +144,7 @@ def averaging():
 
     deberta.to(device)
     test_data_loader = generate_dataset_for_ensembling(pretrained_model="microsoft/deberta-v3-base", df =test_df)
-    deberta_output, target = test_eval_fn_ensemble(test_data_loader, bert, device, pretrained_model="microsoft/deberta-v3-base")
+    deberta_output, target = test_eval_fn_ensemble(test_data_loader, deberta, device, pretrained_model="microsoft/deberta-v3-base")
     del deberta, test_data_loader
 
     xlnet.to(device)
