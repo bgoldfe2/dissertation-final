@@ -90,8 +90,8 @@ def evaluate_ensemble(max_vote_df):
     print(conf_mat)
 
 def generate_dataset_for_ensembling(pretrained_model, df):
-    if(pretrained_model == "microsoft/deberta-v3-base.csv"):
-        dataset = DatasetDeberta(text=df.text.values, target=df.target.values, pretrained_model="microsoft/deberta-v3-base.csv")
+    if(pretrained_model == "microsoft/deberta-v3-base"):
+        dataset = DatasetDeberta(text=df.text.values, target=df.target.values, pretrained_model="microsoft/deberta-v3-base")
     elif(pretrained_model== "roberta-base"):
         dataset = DatasetRoberta(text=df.text.values, target=df.target.values, pretrained_model="roberta-base")
     elif(pretrained_model== "xlnet-base-cased"):
