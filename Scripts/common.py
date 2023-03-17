@@ -13,7 +13,7 @@ def get_parser():
     parser.add_argument("--adamw_epsilon", default=1e-8, type=float,  help='Adam’s epsilon for numerical stability')
     parser.add_argument("--warmup_steps", default=0, type=int,  help='The number of steps for the warmup phase.')
     parser.add_argument("--classes", default=6, type=int, help='Number of output classes')
-    parser.add_argument("--dropout", type=float, default=0.3, help="dropout")
+    parser.add_argument("--dropout", type=float, default=0.2, help="dropout")
     parser.add_argument("--seed", type=int, default=42, help="Seed for reproducibility")
     parser.add_argument("--device", type=str, default="gpu", help="Training device - cpu/gpu")
     parser.add_argument("--dataset", type=str, default="FGBC", help="Select Dataset - FGBC/Twitter")
