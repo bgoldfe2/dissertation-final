@@ -21,6 +21,7 @@ def get_parser():
     parser.add_argument("--pretrained_model", default="microsoft/deberta-v3-base", type=str, help='Name of the pretrained model')  
     parser.add_argument("--deberta_hidden", default=768, type=int, help='Number of hidden states for DeBerta')
     parser.add_argument("--gpt_neo_hidden", default=768, type=int, help='Number of hidden states for GPT_Neo')
+    parser.add_argument("--gpt_neo13_hidden", default=2048, type=int, help='Number of hidden states for Albert')
     parser.add_argument("--roberta_hidden", default=768, type=int, help='Number of hidden states for Roberta')
     parser.add_argument("--xlnet_hidden", default=768, type=int, help='Number of hidden states for XLNet')
     parser.add_argument("--albert_hidden", default=768, type=int, help='Number of hidden states for Albert')
