@@ -12,7 +12,7 @@ def get_parser():
     parser.add_argument("-wd","--weight_decay", default=1e-4, type=float,  help=' Decoupled weight decay to apply')
     parser.add_argument("--adamw_epsilon", default=1e-8, type=float,  help='Adam’s epsilon for numerical stability')
     parser.add_argument("--warmup_steps", default=0, type=int,  help='The number of steps for the warmup phase.')
-    parser.add_argument("--classes", default=6, type=int, help='Number of output classes')
+    parser.add_argument("--classes", default=5, type=int, help='Number of output classes')
     parser.add_argument("--dropout", type=float, default=0.3, help="dropout")
     parser.add_argument("--seed", type=int, default=42, help="Seed for reproducibility")
     parser.add_argument("--device", type=str, default="gpu", help="Training device - cpu/gpu")
@@ -26,7 +26,7 @@ def get_parser():
     parser.add_argument("--albert_hidden", default=768, type=int, help='Number of hidden states for Albert')
     parser.add_argument("--ensemble_type", type=str, default="max-voting", help="Ensemble type - max-voting or averaging")
 
-    parser.add_argument("--dataset_path", default="../Dataset/SixClass/", type=str, help='Path to dataset file')
+    parser.add_argument("--dataset_path", default="../Dataset/FiveClass/", type=str, help='Path to dataset file')   #"../Dataset/SixClass/", type=str, help='Path to dataset file')
     parser.add_argument("--model_path", default="../Models/", type=str, help='Save best model')
     parser.add_argument("--output_path", default="../Output/", type=str, help='Get predicted labels for test data')
     parser.add_argument("--figure_path", default="../Figures/", type=str, help='Directory for accuracy and loss plots')

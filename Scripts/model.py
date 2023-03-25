@@ -18,7 +18,7 @@ class DeBertaFGBC(nn.Module):
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.deberta_hidden, 64)
         self.batch_norm = nn.LayerNorm(64)
-        self.drop2 = nn.Dropout(args.dropout)
+        #self.drop2 = nn.Dropout(args.dropout)
         self.out = nn.Linear(64, args.classes)
 
     def forward(self, input_ids, attention_mask):
@@ -46,7 +46,7 @@ class DeBertaFGBC(nn.Module):
         bo = self.batch_norm(bo)
         #print(f'BatchNorm - {bo.shape}')
         bo = nn.Tanh()(bo)
-        bo = self.drop2(bo)
+        #bo = self.drop2(bo)
         #print(f'Dropout2 - {bo.shape}')
 
         # the return are the values of the last linear layer for each category
