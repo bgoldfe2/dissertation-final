@@ -6,8 +6,8 @@ from collections import defaultdict
 import warnings
 
 import engine
-from model import RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, DeBertaFGBC
-from dataset import DatasetRoberta, DatasetXLNet, DatasetAlbert, DatasetGPT_Neo, DatasetDeberta
+from model import RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, DeBertaFGBC, GPT_Neo13FGBC
+from dataset import DatasetRoberta, DatasetXLNet, DatasetAlbert, DatasetGPT_Neo, DatasetDeberta, DatasetGPT_Neo13
 from common import get_parser
 from evaluate import test_evaluate
 
@@ -202,13 +202,14 @@ def generate_dataset(df):
         return DatasetDeberta(text=df.text.values, target=df.target.values)
     elif(args.pretrained_model == "EleutherAI/gpt-neo-125M"):
         return DatasetGPT_Neo(text=df.text.values, target=df.target.values)
+    elif(args.pretrained_model == "EleutherAI/gpt-neo-1.3B"):
+        return DatasetGPT_Neo13(text=df.text.values, target=df.target.values)
     elif(args.pretrained_model== "roberta-base"):
         return DatasetRoberta(text=df.text.values, target=df.target.values)
     elif(args.pretrained_model== "xlnet-base-cased"):
         return DatasetXLNet(text=df.text.values, target=df.target.values)
     elif(args.pretrained_model == "albert-base-v2"):
         return DatasetAlbert(text=df.text.values, target=df.target.values)
-
 def set_model():
     # BHG debug
     print("The model in the args is ", args.pretrained_model)
@@ -217,6 +218,8 @@ def set_model():
         return DeBertaFGBC()
     elif(args.pretrained_model == "EleutherAI/gpt-neo-125M"):
         return GPT_NeoFGBC()
+    elif(args.pretrained_model == "EleutherAI/gpt-neo-1.3B"):
+        return GPT_Neo13FGBC()
     elif(args.pretrained_model == "roberta-base"):
         return RobertaFGBC()
     elif(args.pretrained_model == "xlnet-base-cased"):

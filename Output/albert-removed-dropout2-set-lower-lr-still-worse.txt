@@ -1,0 +1,80 @@
+Model Class:  <class 'model.AlbertFGBC'> Num Params:  11733318
+<generator object Module.named_parameters at 0x7f833a4c5190>
+This is the type for the optimizer parameters -  <class 'list'>
+This is the shape of the optimizer parameterss -  (2,)
+---Starting Training---
+Epoch 1/6
+----------
+100% 895/895 [02:44<00:00,  5.46it/s, loss=1.12]
+Epoch 1 --- Training loss: 1.1185110891331507 Training accuracy: 0.5884
+100% 299/299 [00:19<00:00, 14.97it/s]
+Epoch 1 --- Validation loss: 0.6698089044628335 Validation accuracy: 0.7793
+Epoch 1 val_acc 0.7793 best_acc 0.0
+Epoch 2/6
+----------
+100% 895/895 [02:42<00:00,  5.52it/s, loss=0.6]
+Epoch 2 --- Training loss: 0.6002334774539457 Training accuracy: 0.8069
+100% 299/299 [00:19<00:00, 15.55it/s]
+Epoch 2 --- Validation loss: 0.5432193084903385 Validation accuracy: 0.8078
+Epoch 2 val_acc 0.8078 best_acc 0.7793
+Epoch 3/6
+----------
+100% 895/895 [02:42<00:00,  5.52it/s, loss=0.498]
+Epoch 3 --- Training loss: 0.4978058712442494 Training accuracy: 0.8399
+100% 299/299 [00:19<00:00, 15.52it/s]
+Epoch 3 --- Validation loss: 0.48405502093675545 Validation accuracy: 0.8381
+Epoch 3 val_acc 0.8381 best_acc 0.8078
+Epoch 4/6
+----------
+100% 895/895 [02:42<00:00,  5.52it/s, loss=0.436]
+Epoch 4 --- Training loss: 0.4359656874860465 Training accuracy: 0.8624
+100% 299/299 [00:19<00:00, 15.54it/s]
+Epoch 4 --- Validation loss: 0.48628563620773047 Validation accuracy: 0.8363
+Epoch 5/6
+----------
+100% 895/895 [02:42<00:00,  5.52it/s, loss=0.389]
+Epoch 5 --- Training loss: 0.38857238957002843 Training accuracy: 0.883
+100% 299/299 [00:19<00:00, 15.54it/s]
+Epoch 5 --- Validation loss: 0.4551619838013697 Validation accuracy: 0.8463
+Epoch 5 val_acc 0.8463 best_acc 0.8381
+Epoch 6/6
+----------
+100% 895/895 [02:42<00:00,  5.52it/s, loss=0.348]
+Epoch 6 --- Training loss: 0.3483677319807713 Training accuracy: 0.903
+100% 299/299 [00:19<00:00, 15.55it/s]
+Epoch 6 --- Validation loss: 0.4623121719645417 Validation accuracy: 0.8418
+
+---History---
+defaultdict(<class 'list'>, {'train_acc': [0.5884, 0.8069, 0.8399, 0.8624, 0.883, 0.903], 'train_loss': [1.1185110891331507, 0.6002334774539457, 0.4978058712442494, 0.4359656874860465, 0.38857238957002843, 0.3483677319807713], 'val_acc': [0.7793, 0.8078, 0.8381, 0.8363, 0.8463, 0.8418], 'val_loss': [0.6698089044628335, 0.5432193084903385, 0.48405502093675545, 0.48628563620773047, 0.4551619838013697, 0.4623121719645417]})
+##################################### Testing ############################################
+
+Evaluating: ---albert-base-v2---
+
+100% 299/299 [00:19<00:00, 14.95it/s]
+Output length --- 9541, Prediction length --- 9541
+Accuracy: 0.8381720993606541
+Mcc Score: 0.80595100616799
+Precision: 0.8394015873426486
+Recall: 0.8381720993606541
+F1_score: 0.8385006093972468
+classification_report:                precision    recall  f1-score   support
+
+           0     0.9834    0.9784    0.9809      1571
+           1     0.9768    0.9842    0.9805      1586
+           2     0.8677    0.8419    0.8546      1613
+           3     0.6168    0.5852    0.6006      1584
+           4     0.6318    0.6852    0.6574      1585
+           5     0.9592    0.9538    0.9565      1602
+
+    accuracy                         0.8382      9541
+   macro avg     0.8393    0.8381    0.8384      9541
+weighted avg     0.8394    0.8382    0.8385      9541
+
+[[1537    3    4   17    9    1]
+ [   1 1561    7    5    7    5]
+ [   0    7 1358  132  107    9]
+ [  15    9   89  927  499   45]
+ [   8   11   99  376 1086    5]
+ [   2    7    8   46   11 1528]]
+ROC-AUC Score: 0.9817415339340371
+##################################### Task End ############################################

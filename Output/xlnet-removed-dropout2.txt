@@ -1,0 +1,68 @@
+Model Class:  <class 'model.XLNetFGBC'> Num Params:  116768070
+<generator object Module.named_parameters at 0x7fe8a0e22660>
+This is the type for the optimizer parameters -  <class 'list'>
+This is the shape of the optimizer parameterss -  (2,)
+---Starting Training---
+Epoch 1/4
+----------
+100% 895/895 [03:45<00:00,  3.96it/s, loss=0.933]
+Epoch 1 --- Training loss: 0.9327554770688105 Training accuracy: 0.6512
+100% 299/299 [00:24<00:00, 12.03it/s]
+Epoch 1 --- Validation loss: 0.5131961275701937 Validation accuracy: 0.8236
+Epoch 1 val_acc 0.8236 best_acc 0.0
+Epoch 2/4
+----------
+100% 895/895 [03:44<00:00,  4.00it/s, loss=0.461]
+Epoch 2 --- Training loss: 0.4610162258148193 Training accuracy: 0.841
+100% 299/299 [00:24<00:00, 12.38it/s]
+Epoch 2 --- Validation loss: 0.4342109558973025 Validation accuracy: 0.847
+Epoch 2 val_acc 0.847 best_acc 0.8236
+Epoch 3/4
+----------
+100% 895/895 [03:44<00:00,  3.99it/s, loss=0.371]
+Epoch 3 --- Training loss: 0.37050774906600653 Training accuracy: 0.8742
+100% 299/299 [00:24<00:00, 12.39it/s]
+Epoch 3 --- Validation loss: 0.4219085625481845 Validation accuracy: 0.8495
+Epoch 3 val_acc 0.8495 best_acc 0.847
+Epoch 4/4
+----------
+100% 895/895 [03:44<00:00,  3.99it/s, loss=0.317]
+Epoch 4 --- Training loss: 0.31664033448479695 Training accuracy: 0.8971
+100% 299/299 [00:24<00:00, 12.38it/s]
+Epoch 4 --- Validation loss: 0.4202038434935254 Validation accuracy: 0.8523
+Epoch 4 val_acc 0.8523 best_acc 0.8495
+
+---History---
+defaultdict(<class 'list'>, {'train_acc': [0.6512, 0.841, 0.8742, 0.8971], 'train_loss': [0.9327554770688105, 0.4610162258148193, 0.37050774906600653, 0.31664033448479695], 'val_acc': [0.8236, 0.847, 0.8495, 0.8523], 'val_loss': [0.5131961275701937, 0.4342109558973025, 0.4219085625481845, 0.4202038434935254]})
+##################################### Testing ############################################
+
+Evaluating: ---xlnet-base-cased---
+
+100% 299/299 [00:25<00:00, 11.93it/s]
+Output length --- 9541, Prediction length --- 9541
+Accuracy: 0.8521119379519967
+Mcc Score: 0.8229306939416767
+Precision: 0.8498185190853998
+Recall: 0.8521119379519967
+F1_score: 0.850102005749723
+classification_report:                precision    recall  f1-score   support
+
+           0     0.9796    0.9771    0.9783      1571
+           1     0.9744    0.9849    0.9796      1586
+           2     0.8635    0.8940    0.8785      1613
+           3     0.6610    0.5663    0.6100      1584
+           4     0.6663    0.7243    0.6941      1585
+           5     0.9537    0.9650    0.9594      1602
+
+    accuracy                         0.8521      9541
+   macro avg     0.8498    0.8519    0.8500      9541
+weighted avg     0.8498    0.8521    0.8501      9541
+
+[[1535    2    3   18   11    2]
+ [   0 1562    7    5    9    3]
+ [   1    6 1442  101   60    3]
+ [  17   10  108  897  489   63]
+ [  13   16  106  298 1148    4]
+ [   1    7    4   38    6 1546]]
+ROC-AUC Score: 0.9838756825294979
+##################################### Task End ############################################

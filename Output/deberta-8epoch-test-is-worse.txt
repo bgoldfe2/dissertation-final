@@ -1,0 +1,92 @@
+Model Class:  <class 'model.DeBertaFGBC'> Num Params:  183881286
+<generator object Module.named_parameters at 0x7fccbd11e510>
+This is the type for the optimizer parameters -  <class 'list'>
+This is the shape of the optimizer parameterss -  (2,)
+---Starting Training---
+Epoch 1/8
+----------
+100% 895/895 [03:28<00:00,  4.29it/s, loss=1.18]
+Epoch 1 --- Training loss: 1.1778351789746204 Training accuracy: 0.5553
+100% 299/299 [00:22<00:00, 13.59it/s]
+Epoch 1 --- Validation loss: 0.7250896671344604 Validation accuracy: 0.7939
+Epoch 1 val_acc 0.7939 best_acc 0.0
+Epoch 2/8
+----------
+100% 895/895 [03:25<00:00,  4.35it/s, loss=0.589]
+Epoch 2 --- Training loss: 0.5883136203502144 Training accuracy: 0.816
+100% 299/299 [00:21<00:00, 14.11it/s]
+Epoch 2 --- Validation loss: 0.49408389996724783 Validation accuracy: 0.8318
+Epoch 2 val_acc 0.8318 best_acc 0.7939
+Epoch 3/8
+----------
+100% 895/895 [03:26<00:00,  4.33it/s, loss=0.453]
+Epoch 3 --- Training loss: 0.4524612597746556 Training accuracy: 0.852
+100% 299/299 [00:21<00:00, 14.15it/s]
+Epoch 3 --- Validation loss: 0.41231460812000126 Validation accuracy: 0.8545
+Epoch 3 val_acc 0.8545 best_acc 0.8318
+Epoch 4/8
+----------
+100% 895/895 [03:25<00:00,  4.35it/s, loss=0.38]
+Epoch 4 --- Training loss: 0.38017886802970363 Training accuracy: 0.8775
+100% 299/299 [00:21<00:00, 14.21it/s]
+Epoch 4 --- Validation loss: 0.3890877858327583 Validation accuracy: 0.8623
+Epoch 4 val_acc 0.8623 best_acc 0.8545
+Epoch 5/8
+----------
+100% 895/895 [03:25<00:00,  4.35it/s, loss=0.328]
+Epoch 5 --- Training loss: 0.3280791344922348 Training accuracy: 0.8966
+100% 299/299 [00:21<00:00, 14.22it/s]
+Epoch 5 --- Validation loss: 0.4177432764932065 Validation accuracy: 0.8587
+Epoch 6/8
+----------
+100% 895/895 [03:25<00:00,  4.35it/s, loss=0.289]
+Epoch 6 --- Training loss: 0.28863903375644256 Training accuracy: 0.9118
+100% 299/299 [00:21<00:00, 14.20it/s]
+Epoch 6 --- Validation loss: 0.4120131349284513 Validation accuracy: 0.8519
+Epoch 7/8
+----------
+100% 895/895 [03:25<00:00,  4.35it/s, loss=0.252]
+Epoch 7 --- Training loss: 0.252419380739581 Training accuracy: 0.9246
+100% 299/299 [00:21<00:00, 14.20it/s]
+Epoch 7 --- Validation loss: 0.417101530750659 Validation accuracy: 0.8569
+Epoch 8/8
+----------
+100% 895/895 [03:25<00:00,  4.35it/s, loss=0.232]
+Epoch 8 --- Training loss: 0.23241673786630176 Training accuracy: 0.9316
+100% 299/299 [00:21<00:00, 14.21it/s]
+Epoch 8 --- Validation loss: 0.4275438482919864 Validation accuracy: 0.8562
+
+---History---
+defaultdict(<class 'list'>, {'train_acc': [0.5553, 0.816, 0.852, 0.8775, 0.8966, 0.9118, 0.9246, 0.9316], 'train_loss': [1.1778351789746204, 0.5883136203502144, 0.4524612597746556, 0.38017886802970363, 0.3280791344922348, 0.28863903375644256, 0.252419380739581, 0.23241673786630176], 'val_acc': [0.7939, 0.8318, 0.8545, 0.8623, 0.8587, 0.8519, 0.8569, 0.8562], 'val_loss': [0.7250896671344604, 0.49408389996724783, 0.41231460812000126, 0.3890877858327583, 0.4177432764932065, 0.4120131349284513, 0.417101530750659, 0.4275438482919864]})
+##################################### Testing ############################################
+
+Evaluating: ---microsoft/deberta-v3-base---
+
+100% 299/299 [00:22<00:00, 13.59it/s]
+Output length --- 9541, Prediction length --- 9541
+Accuracy: 0.8573524787758097
+Mcc Score: 0.8289676666939704
+Precision: 0.8564386165485569
+Recall: 0.8573524787758097
+F1_score: 0.8565871533570789
+classification_report:                precision    recall  f1-score   support
+
+           0     0.9859    0.9771    0.9815      1571
+           1     0.9769    0.9861    0.9815      1586
+           2     0.8897    0.8847    0.8872      1613
+           3     0.6575    0.6061    0.6307      1584
+           4     0.6746    0.7180    0.6956      1585
+           5     0.9534    0.9713    0.9623      1602
+
+    accuracy                         0.8574      9541
+   macro avg     0.8563    0.8572    0.8565      9541
+weighted avg     0.8564    0.8574    0.8566      9541
+
+[[1535    7    2   17   10    0]
+ [   2 1564    2    5    8    5]
+ [   0    8 1427   98   77    3]
+ [  15    9   87  960  450   63]
+ [   5   13   82  342 1138    5]
+ [   0    0    4   38    4 1556]]
+ROC-AUC Score: 0.984878849802299
+##################################### Task End ############################################

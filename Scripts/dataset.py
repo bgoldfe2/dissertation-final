@@ -75,6 +75,37 @@ class DatasetGPT_Neo:
             "target":torch.tensor(self.target[item], dtype = torch.long)
         }
 
+class DatasetGPT_Neo13:
+    def __init__(self, text, target, pretrained_model = args.pretrained_model):
+        self.text = text
+        self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
+        self.tokenizer.pad_token = "[PAD]"
+        self.max_length = args.max_length
+        self.target = target
+
+    def __len__(self):
+        return len(self.text)
+
+    def __getitem__(self, item):
+        text = str(self.text[item])
+        text = "".join(text.split())
+
+        inputs = self.tokenizer.encode_plus(
+            text = text,
+            padding = "max_length",
+            truncation = True,
+            max_length = self.max_length
+        )
+
+        input_ids = inputs["input_ids"]
+        attention_mask = inputs["attention_mask"]
+
+        return{
+            "input_ids":torch.tensor(input_ids,dtype = torch.long),
+            "attention_mask":torch.tensor(attention_mask, dtype = torch.long),
+            "target":torch.tensor(self.target[item], dtype = torch.long)
+        }
+
 class DatasetRoberta:
     def __init__(self, text, target, pretrained_model = args.pretrained_model):
         self.text = text
@@ -181,8 +212,8 @@ def train_validate_test_split(df, train_percent=0.6, validate_percent=.2, seed=7
 
 
 if __name__=="__main__":
-    tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-125M")
-    print(tokenizer("Hello world"))
+    tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-1.3B")
+    print("This is the tokenizer - ",tokenizer("Hello world"))
     
     df = pd.read_csv(args.dataset_path+"data.csv").dropna()
     
@@ -193,6 +224,6 @@ if __name__=="__main__":
     test_df.to_csv(args.dataset_path+'test.csv')
 
     print(set(df['label'].values))
-    dataset = DatasetGPT_Neo(text=df.text.values, target=df.target.values)
+    dataset = DatasetGPT_Neo13(text=df.text.values, target=df.target.values)
     print(df.iloc[1]['text'])
     print(dataset[1])

@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc
 
 from common import get_parser
-from model import DeBertaFGBC, RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC
-from dataset import DatasetDeberta, DatasetRoberta, DatasetXLNet, DatasetAlbert, DatasetGPT_Neo
+from model import DeBertaFGBC, RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, GPT_Neo13FGBC
+from dataset import DatasetDeberta, DatasetRoberta, DatasetXLNet, DatasetAlbert, DatasetGPT_Neo, DatasetGPT_Neo13
 
 parser = get_parser()
 args = parser.parse_args()
@@ -51,6 +51,7 @@ def load_prediction():
     roberta_path = (f'{args.output_path}roberta-base.csv')
     albert_path = (f'{args.output_path}albert-base-v2.csv')
     gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-125M.csv')
+    gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-1.3B.csv')
 
     deberta = pd.read_csv(deberta_path)
     xlnet = pd.read_csv(xlnet_path)
@@ -100,6 +101,8 @@ def generate_dataset_for_ensembling(pretrained_model, df):
         dataset = DatasetAlbert(text=df.text.values, target=df.target.values, pretrained_model="albert-base-v2")
     elif(pretrained_model == "EleutherAI/gpt-neo-125M"):
         dataset = DatasetGPT_Neo(text=df.text.values, target=df.target.values, pretrained_model="EleutherAI/gpt-neo-125M")
+    elif(pretrained_model == "EleutherAI/gpt-neo-1.3M"):
+        dataset = DatasetGPT_Neo13(text=df.text.values, target=df.target.values, pretrained_model="EleutherAI/gpt-neo-1.3B")
 
     data_loader = torch.utils.data.DataLoader(
         dataset = dataset,
@@ -115,18 +118,21 @@ def load_models():
     roberta_path = (f'{args.model_path}roberta-base_Best_Val_Acc.bin')
     albert_path = (f'{args.model_path}albert-base-v2_Best_Val_Acc.bin')
     gpt_neo_path = (f'{args.model_path}EleutherAI/gpt-neo-125M_Best_Val_Acc.bin')
+    gpt_neo13_path = (f'{args.model_path}EleutherAI/gpt-neo-1.3B_Best_Val_Acc.bin')
 
     deberta = DeBertaFGBC(pretrained_model="microsoft/deberta-v3-base")
     xlnet = XLNetFGBC(pretrained_model="xlnet-base-cased")
     roberta = RobertaFGBC(pretrained_model="roberta-base")
     albert = AlbertFGBC(pretrained_model="albert-base-v2")
     gpt_neo = GPT_NeoFGBC(pretrained_model="EleutherAI/gpt-neo-125M")
+    gpt_neo13 = GPT_NeoFGBC13(pretrained_model="EleutherAI/gpt-neo-1.3B")
 
     deberta.load_state_dict(torch.load(deberta_path))
     xlnet.load_state_dict(torch.load(xlnet_path))
     roberta.load_state_dict(torch.load(roberta_path))
     albert.load_state_dict(torch.load(albert_path))
     gpt_neo.load_state_dict(torch.load(gpt_neo_path))
+    gpt_neo13.load_state_dict(torch.load(gpt_neo13_path))
 
     return deberta, xlnet, roberta, albert, gpt_neo
 

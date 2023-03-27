@@ -1,0 +1,67 @@
+Model Class:  <class 'model.DeBertaFGBC'> Num Params:  183881286
+<generator object Module.named_parameters at 0x7f21c8114970>
+This is the type for the optimizer parameters -  <class 'list'>
+This is the shape of the optimizer parameterss -  (2,)
+---Starting Training---
+Epoch 1/4
+----------
+100% 895/895 [03:28<00:00,  4.30it/s, loss=0.917]
+Epoch 1 --- Training loss: 0.9170693621622118 Training accuracy: 0.671
+100% 299/299 [00:22<00:00, 13.59it/s]
+Epoch 1 --- Validation loss: 0.5412961235114164 Validation accuracy: 0.8162
+Epoch 1 val_acc 0.8162 best_acc 0.0
+Epoch 2/4
+----------
+100% 895/895 [03:26<00:00,  4.34it/s, loss=0.467]
+Epoch 2 --- Training loss: 0.46729512697491565 Training accuracy: 0.8418
+100% 299/299 [00:21<00:00, 14.22it/s]
+Epoch 2 --- Validation loss: 0.4390072027177715 Validation accuracy: 0.849
+Epoch 2 val_acc 0.849 best_acc 0.8162
+Epoch 3/4
+----------
+100% 895/895 [03:26<00:00,  4.34it/s, loss=0.377]
+Epoch 3 --- Training loss: 0.37699752636461953 Training accuracy: 0.8751
+100% 299/299 [00:21<00:00, 14.22it/s]
+Epoch 3 --- Validation loss: 0.40796796875354835 Validation accuracy: 0.858
+Epoch 3 val_acc 0.858 best_acc 0.849
+Epoch 4/4
+----------
+100% 895/895 [03:26<00:00,  4.34it/s, loss=0.319]
+Epoch 4 --- Training loss: 0.3192133907832247 Training accuracy: 0.8982
+100% 299/299 [00:21<00:00, 14.21it/s]
+Epoch 4 --- Validation loss: 0.4056720833315897 Validation accuracy: 0.8602
+Epoch 4 val_acc 0.8602 best_acc 0.858
+
+---History---
+defaultdict(<class 'list'>, {'train_acc': [0.671, 0.8418, 0.8751, 0.8982], 'train_loss': [0.9170693621622118, 0.46729512697491565, 0.37699752636461953, 0.3192133907832247], 'val_acc': [0.8162, 0.849, 0.858, 0.8602], 'val_loss': [0.5412961235114164, 0.4390072027177715, 0.40796796875354835, 0.4056720833315897]})
+##################################### Testing ############################################
+
+Evaluating: ---microsoft/deberta-v3-base---
+
+100% 299/299 [00:22<00:00, 13.51it/s]
+Output length --- 9541, Prediction length --- 9541
+Accuracy: 0.8608112357195262
+Mcc Score: 0.8336536389052348
+Precision: 0.8590775915954896
+Recall: 0.8608112357195262
+F1_score: 0.8584224223007272
+classification_report:                precision    recall  f1-score   support
+
+           0     0.9778    0.9796    0.9787      1571
+           1     0.9725    0.9817    0.9771      1586
+           2     0.8762    0.8909    0.8835      1613
+           3     0.7035    0.5751    0.6329      1584
+           4     0.6787    0.7621    0.7180      1585
+           5     0.9455    0.9744    0.9597      1602
+
+    accuracy                         0.8608      9541
+   macro avg     0.8590    0.8607    0.8583      9541
+weighted avg     0.8591    0.8608    0.8584      9541
+
+[[1539    7    2   15    8    0]
+ [   1 1557    2    5   15    6]
+ [   0    9 1437   82   79    6]
+ [  22   12  103  911  466   70]
+ [  12   13   92  252 1208    8]
+ [   0    3    4   30    4 1561]]
+ROC-AUC Score: 0.9857892813083536
