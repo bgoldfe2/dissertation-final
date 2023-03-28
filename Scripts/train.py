@@ -15,6 +15,14 @@ import utils
 from visualize import save_acc_curves, save_loss_curves
 from dataset import train_validate_test_split
 
+from torchinfo import summary
+from torch.utils.tensorboard import SummaryWriter
+from typing import Dict, List
+from tqdm.auto import tqdm
+
+# Create a writer with all default settings
+writer = SummaryWriter()
+
 parser = get_parser()
 args = parser.parse_args()
 warnings.filterwarnings("ignore")
@@ -141,6 +149,12 @@ def run():
     )
 
     print("---Starting Training---")
+    # Create empty results dictionary - new BHG using SummaryWriter class
+    results = {"train_loss": [],
+               "train_acc": [],
+               "test_loss": [],
+               "test_acc": []
+    }
 
     history = defaultdict(list)
     best_acc = 0.0
@@ -165,6 +179,33 @@ def run():
             # BHG needed to set best_acc to val_acc this was missing in prior implementation
             best_acc=val_acc
 
+        # Update results dictionary
+        results["train_loss"].append(train_loss)
+        results["train_acc"].append(train_acc)
+        results["test_loss"].append(test_loss)
+        results["test_acc"].append(test_acc)
+
+        ### New: Experiment tracking ###
+        # Add loss results to SummaryWriter
+        writer.add_scalars(main_tag="Loss", 
+                           tag_scalar_dict={"train_loss": train_loss,
+                                            "test_loss": test_loss},
+                           global_step=epoch)
+
+        # Add accuracy results to SummaryWriter
+        writer.add_scalars(main_tag="Accuracy", 
+                           tag_scalar_dict={"train_acc": train_acc,
+                                            "test_acc": test_acc}, 
+                           global_step=epoch)
+        
+        # Track the PyTorch model architecture
+        writer.add_graph(model=model, 
+                         # Pass in an example input
+                         input_to_model=torch.randn(32, 3, 224, 224).to(device))
+    
+    # Close the writer
+    writer.close()
+
     print(f'\n---History---\n{history}')
     print("##################################### Testing ############################################")
     test_evaluate(test_df, test_data_loader, model, device)
@@ -176,6 +217,9 @@ def run():
     torch.cuda.empty_cache()
     torch.cuda.synchronize()
     print("##################################### Task End ############################################")
+    
+    # New BHG return the writer object
+    return writer
 
 def create_dataset_files():
     if args.dataset == "FGBC":

@@ -1,12 +1,17 @@
 import torch
 import torch.nn as nn
-from tqdm import tqdm
+#from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import f1_score
 
 # import utils
 import utils
 from common import get_parser
+
+from torchinfo import summary
+from torch.utils.tensorboard import SummaryWriter
+from typing import Dict, List
+from tqdm.auto import tqdm
 
 parser = get_parser()
 args = parser.parse_args()
@@ -34,8 +39,12 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
         output = torch.log_softmax(output, dim = 1)
         output = torch.argmax(output, dim = 1)
        
+
+        # BHG need to add in some print statements to understand ouput, target and input_ids
+        # and to uncomment the modulus output during training below
+
         # if(ii%100 == 0 and ii!=0) or (ii == len(data_loader)-1):
-        #     print((f'ii={ii}, Train F1={f1},Train loss={loss.item()}, time={end-start}'))
+        print((f'ii={ii}, Train F1={f1},Train loss={loss.item()}, time={end-start}'))
 
         loss.backward() # Calculate gradients based on loss
         nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
