@@ -54,8 +54,6 @@ def run():
     encoding = train_dataset[1]['input_ids']
     print("The Decoded Token Text tensor is -- ",train_dataset.tokenizer.convert_ids_to_tokens(encoding))
     
-
-
     # Nov 30 afternoon stopping point
     # Able to get the tokens out of the Dataset object
     
@@ -118,7 +116,6 @@ def run():
     print ('This is the type for the optimizer parameters - ',type(optimizer_parameters))
     print ('This is the shape of the optimizer parameterss - ',np.shape(optimizer_parameters))
     
-
     # As per the Kaggle On Stability of a Few-Samples tutorial you should not 
     # Also blanket override the weight_decay if it is declared conditionaly in
     # the optimizer_parameter dictionary
@@ -149,6 +146,7 @@ def run():
     )
 
     print("---Starting Training---")
+    
     # Create empty results dictionary - new BHG using SummaryWriter class
     results = {"train_loss": [],
                "train_acc": [],
@@ -182,20 +180,20 @@ def run():
         # Update results dictionary
         results["train_loss"].append(train_loss)
         results["train_acc"].append(train_acc)
-        results["test_loss"].append(test_loss)
-        results["test_acc"].append(test_acc)
+        results["test_loss"].append(val_loss)
+        results["test_acc"].append(val_acc)
 
         ### New: Experiment tracking ###
         # Add loss results to SummaryWriter
         writer.add_scalars(main_tag="Loss", 
                            tag_scalar_dict={"train_loss": train_loss,
-                                            "test_loss": test_loss},
+                                            "test_loss": val_loss},
                            global_step=epoch)
 
         # Add accuracy results to SummaryWriter
         writer.add_scalars(main_tag="Accuracy", 
                            tag_scalar_dict={"train_acc": train_acc,
-                                            "test_acc": test_acc}, 
+                                            "test_acc": val_acc}, 
                            global_step=epoch)
         
         # Track the PyTorch model architecture
