@@ -32,6 +32,9 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
     final_output = []
 
     for ii, data in enumerate(progress_bar):
+        # Get a single example of the input data to the model and stop
+        #print(data)
+        #asdf
         output, target, input_ids = generate_output(data, model, device)
 
         loss = loss_fn(output, target)
@@ -44,7 +47,7 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
         # and to uncomment the modulus output during training below
 
         # if(ii%100 == 0 and ii!=0) or (ii == len(data_loader)-1):
-        print((f'ii={ii}, Train F1={f1},Train loss={loss.item()}, time={end-start}'))
+        # print((f'ii={ii}, Train F1={f1},Train loss={loss.item()}, time={end-start}'))
 
         loss.backward() # Calculate gradients based on loss
         nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)

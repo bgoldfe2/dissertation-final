@@ -125,7 +125,7 @@ def load_models():
     roberta = RobertaFGBC(pretrained_model="roberta-base")
     albert = AlbertFGBC(pretrained_model="albert-base-v2")
     gpt_neo = GPT_NeoFGBC(pretrained_model="EleutherAI/gpt-neo-125M")
-    gpt_neo13 = GPT_NeoFGBC13(pretrained_model="EleutherAI/gpt-neo-1.3B")
+    gpt_neo13 = GPT_Neo13FGBC(pretrained_model="EleutherAI/gpt-neo-1.3B")
 
     deberta.load_state_dict(torch.load(deberta_path))
     xlnet.load_state_dict(torch.load(xlnet_path))

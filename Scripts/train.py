@@ -197,9 +197,8 @@ def run():
                            global_step=epoch)
         
         # Track the PyTorch model architecture
-        writer.add_graph(model=model, 
-                         # Pass in an example input
-                         input_to_model=torch.randn(32, 3, 224, 224).to(device))
+        example = next(iter(valid_data_loader))[0]
+        writer.add_graph(model=model, input_to_model=example.to(device))
     
     # Close the writer
     writer.close()
