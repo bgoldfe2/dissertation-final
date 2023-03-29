@@ -18,6 +18,8 @@ from dataset import train_validate_test_split
 from torchinfo import summary
 from torch.utils.tensorboard import SummaryWriter
 from typing import Dict, List
+from transformers import AutoTokenizer
+from datasets import Dataset
 from tqdm.auto import tqdm
 
 # Create a writer with all default settings
@@ -197,8 +199,14 @@ def run():
                            global_step=epoch)
         
         # Track the PyTorch model architecture
-        example = next(iter(valid_data_loader))[0]
-        writer.add_graph(model=model, input_to_model=example.to(device))
+        tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-125M")
+        example = tokenizer("This is a happy sentence")
+        example.set_format(type="torch", columns=["input_ids", "attention_mask"])
+        print("dataset format type is ",example.format['type'])
+
+        print("example is type - ", type(example),"\n",example)
+        # Note example provided a .to(device) on input_to_model
+        writer.add_graph(model=model, input_to_model=example, verbose=True)
     
     # Close the writer
     writer.close()
