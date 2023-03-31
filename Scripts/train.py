@@ -199,14 +199,16 @@ def run():
                            global_step=epoch)
         
         # Track the PyTorch model architecture
-        tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-125M")
-        example = tokenizer("This is a happy sentence")
-        example.set_format(type="torch", columns=["input_ids", "attention_mask"])
-        print("dataset format type is ",example.format['type'])
+        #tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-125M")
+        #example = tokenizer("This is a happy sentence")
+        #example.set_format(type="torch", columns=["input_ids", "attention_mask"])
+        #print("dataset format type is ",example.format['type'])
 
-        print("example is type - ", type(example),"\n",example)
+        #print("example is type - ", type(example),"\n",example)
         # Note example provided a .to(device) on input_to_model
-        writer.add_graph(model=model, input_to_model=example, verbose=True)
+        # this sucks cannot get to work, will pass on this graph visualization
+        # TODO Need to save the model bin and output inferences
+        # writer.add_graph(model=model, input_to_model=example, verbose=True)
     
     # Close the writer
     writer.close()
