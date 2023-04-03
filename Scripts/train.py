@@ -8,25 +8,20 @@ import warnings
 import engine
 from model import RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, DeBertaFGBC, GPT_Neo13FGBC
 from dataset import DatasetRoberta, DatasetXLNet, DatasetAlbert, DatasetGPT_Neo, DatasetDeberta, DatasetGPT_Neo13
-from common import get_parser
+from common import Model_Config
 from evaluate import test_evaluate
 
 import utils
 from visualize import save_acc_curves, save_loss_curves
 from dataset import train_validate_test_split
 
-#from torchinfo import summary
-#from torch.utils.tensorboard import SummaryWriter
-#from typing import Dict, List
-#from transformers import AutoTokenizer
-#from datasets import Dataset
-#from tqdm.auto import tqdm
+import utils
+import matplotlib.pyplot as plt
 
-# Create a writer with all default settings
-#writer = SummaryWriter()
-
-parser = get_parser()
-args = parser.parse_args()
+#parser = get_parser()
+#args = parser.parse_args()
+args = Model_Config()
+args = utils.create_folders(args)
 warnings.filterwarnings("ignore")
 np.random.seed(args.seed)
 torch.manual_seed(args.seed)
@@ -39,7 +34,7 @@ def run():
     train_df = pd.read_csv(f'{args.dataset_path}train.csv').dropna()
     valid_df = pd.read_csv(f'{args.dataset_path}valid.csv').dropna()
     test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
-
+       
     print(set(train_df.label.values))
     print("train len - {}, valid len - {}, test len - {}".format(len(train_df),\
      len(valid_df),len(test_df)))
@@ -55,9 +50,6 @@ def run():
     
     encoding = train_dataset[1]['input_ids']
     print("The Decoded Token Text tensor is -- ",train_dataset.tokenizer.convert_ids_to_tokens(encoding))
-    
-    # Nov 30 afternoon stopping point
-    # Able to get the tokens out of the Dataset object
     
     train_data_loader = torch.utils.data.DataLoader(
         dataset = train_dataset,
@@ -79,7 +71,7 @@ def run():
         shuffle = False
     )
     
-    device = utils.set_device()
+    device = utils.set_device(args)
 
     model = set_model()
     # BHG model type and number of parameters initial instantiation
@@ -149,13 +141,6 @@ def run():
 
     print("---Starting Training---")
     
-    # Create empty results dictionary - new BHG using SummaryWriter class
-    results = {"train_loss": [],
-               "train_acc": [],
-               "test_loss": [],
-               "test_acc": []
-    }
-
     history = defaultdict(list)
     best_acc = 0.0
     
@@ -179,55 +164,23 @@ def run():
             # BHG needed to set best_acc to val_acc this was missing in prior implementation
             best_acc=val_acc
 
-        # Update results dictionary
-        results["train_loss"].append(train_loss)
-        results["train_acc"].append(train_acc)
-        results["test_loss"].append(val_loss)
-        results["test_acc"].append(val_acc)
-
-        ### New: Experiment tracking ###
-        # Add loss results to SummaryWriter
-        #writer.add_scalars(main_tag="Loss", 
-        #                   tag_scalar_dict={"train_loss": train_loss,
-        #                                    "test_loss": val_loss},
-        #                   global_step=epoch)
-
-        # Add accuracy results to SummaryWriter
-        #writer.add_scalars(main_tag="Accuracy", 
-        #                   tag_scalar_dict={"train_acc": train_acc,
-        #                                    "test_acc": val_acc}, 
-        #                   global_step=epoch)
         
-        # Track the PyTorch model architecture
-        #tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-125M")
-        #example = tokenizer("This is a happy sentence")
-        #example.set_format(type="torch", columns=["input_ids", "attention_mask"])
-        #print("dataset format type is ",example.format['type'])
-
-        #print("example is type - ", type(example),"\n",example)
-        # Note example provided a .to(device) on input_to_model
-        # this sucks cannot get to work, will pass on this graph visualization
-        # TODO Need to save the model bin and output inferences
-        # writer.add_graph(model=model, input_to_model=example, verbose=True)
-    
-    # Close the writer
-    #writer.close()
-
     print(f'\n---History---\n{history}')
     print("##################################### Testing ############################################")
-    test_evaluate(test_df, test_data_loader, model, device)
+    pred_test, acc = test_evaluate(test_df, test_data_loader, model, device,args)
+    pred_test.to_csv(f'{args.output_path}{args.pretrained_model}---test_acc---{acc}.csv', index = False)
 
-    save_acc_curves(history)
-    save_loss_curves(history)
+    plt_acc = save_acc_curves(history)
+    plt_loss = save_loss_curves(history)
+
+    plt_acc.savefig(f"{args.figure_path}{args.pretrained_model}---acc---.pdf")
+    plt_loss.savefig(f"{args.figure_path}{args.pretrained_model}---loss---.pdf")
     
     del model, train_data_loader, valid_data_loader, train_dataset, valid_dataset
     torch.cuda.empty_cache()
     torch.cuda.synchronize()
-    print("##################################### Task End ############################################")
-    
-    # New BHG return the writer object
-    #return writer
-
+    print("##################################### Task End ############################################")    
+   
 def create_dataset_files():
     if args.dataset == "FGBC":
         df = pd.read_csv(f'{args.dataset_path}dataset.csv').dropna()

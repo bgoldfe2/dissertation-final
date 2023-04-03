@@ -12,6 +12,7 @@ from engine import test_eval_fn_ensemble, test_eval_fn
 from utils import sorting_function, evaluate_ensemble, print_stats, load_prediction, set_device, load_models, generate_dataset_for_ensembling, calc_roc_auc
 from common import get_parser
 
+#TODO need to move the code to a driver file and/or class to avoid this
 parser = get_parser()
 args = parser.parse_args()
 np.random.seed(args.seed)
@@ -99,6 +100,7 @@ def max_vote3():
     max_vote_df['pred'] = preds
 
     evaluate_ensemble(max_vote_df)
+
 # BHG Added new function
 def rocauc():
     deberta, xlnet, roberta, albert, gptneo = load_models()

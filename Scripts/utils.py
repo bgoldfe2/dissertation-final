@@ -9,11 +9,8 @@ from common import get_parser
 from model import DeBertaFGBC, RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, GPT_Neo13FGBC
 from dataset import DatasetDeberta, DatasetRoberta, DatasetXLNet, DatasetAlbert, DatasetGPT_Neo, DatasetGPT_Neo13
 
-parser = get_parser()
-args = parser.parse_args()
-np.random.seed(args.seed)
-torch.manual_seed(args.seed)
-torch.cuda.manual_seed(args.seed)
+import os
+from datetime import datetime
 
 class AverageMeter:
     """Computes and stores the average and current value"""
@@ -32,7 +29,45 @@ class AverageMeter:
         self.count += n
         self.avg = self.sum / self.count
 
-def set_device():
+def create_folders(args):
+    # Create the Runs Experiment folder location for Model,s Output, Figures
+    # get current date and time
+    # TODO move to utils
+
+    current_datetime = str(datetime.now()).replace(" ","_")
+    
+    # create a file object along with extension
+    folder_name = "../Runs/" + current_datetime + "_" + args.pretrained_model.replace('/','_')
+    n=7 # number of letters in Scripts which is the folder we should be running from
+    cur_dir = os.getcwd()
+    if cur_dir[len(cur_dir)-n:] != 'Scripts':
+        print('Run train.py from Scripts Directory')        
+    else:
+        os.mkdir(folder_name) 
+        print("made directory!!!!! ",folder_name)
+        args.model_path = folder_name + "/Models/"
+        args.output_path = folder_name + "/Output/"
+        args.figure_path = folder_name  + "/Figures/"
+        os.mkdir(args.model_path)
+        os.mkdir(args.output_path)
+        os.mkdir(args.figure_path)
+
+        if 'microsoft' in folder_name:
+            tmp_fold4 = args.model_path + "microsoft/"
+            tmp_fold5 = args.output_path + "microsoft/"
+            tmp_fold6 = args.figure_path  + "microsoft/"
+        elif 'EleutherAI' in folder_name:
+           tmp_fold4 = args.model_path + "EleutherAI/"
+           tmp_fold5 = args.output_path + "EleutherAI/"
+           tmp_fold6 = args.figure_path  + "EleutherAI/"
+           
+        os.mkdir(tmp_fold4)
+        os.mkdir(tmp_fold5)
+        os.mkdir(tmp_fold6)
+    
+    return args
+
+def set_device(args):
     device = ""
     if(args.device=="cpu"):
         device = "cpu"
@@ -141,7 +176,7 @@ def oneHot(arr):
     b[np.arange(arr.size),arr] = 1
     return b
 
-def calc_roc_auc(all_labels, all_logits, name=None):
+def calc_roc_auc(all_labels, all_logits, args, name=None, ):
     attributes = []
     if(args.classes==6):
        attributes = ['Age', 'Ethnicity', 'Gender', 'Notcb', 'Others', 'Religion']
