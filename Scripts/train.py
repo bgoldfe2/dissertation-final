@@ -15,15 +15,15 @@ import utils
 from visualize import save_acc_curves, save_loss_curves
 from dataset import train_validate_test_split
 
-from torchinfo import summary
-from torch.utils.tensorboard import SummaryWriter
-from typing import Dict, List
-from transformers import AutoTokenizer
-from datasets import Dataset
-from tqdm.auto import tqdm
+#from torchinfo import summary
+#from torch.utils.tensorboard import SummaryWriter
+#from typing import Dict, List
+#from transformers import AutoTokenizer
+#from datasets import Dataset
+#from tqdm.auto import tqdm
 
 # Create a writer with all default settings
-writer = SummaryWriter()
+#writer = SummaryWriter()
 
 parser = get_parser()
 args = parser.parse_args()
@@ -187,16 +187,16 @@ def run():
 
         ### New: Experiment tracking ###
         # Add loss results to SummaryWriter
-        writer.add_scalars(main_tag="Loss", 
-                           tag_scalar_dict={"train_loss": train_loss,
-                                            "test_loss": val_loss},
-                           global_step=epoch)
+        #writer.add_scalars(main_tag="Loss", 
+        #                   tag_scalar_dict={"train_loss": train_loss,
+        #                                    "test_loss": val_loss},
+        #                   global_step=epoch)
 
         # Add accuracy results to SummaryWriter
-        writer.add_scalars(main_tag="Accuracy", 
-                           tag_scalar_dict={"train_acc": train_acc,
-                                            "test_acc": val_acc}, 
-                           global_step=epoch)
+        #writer.add_scalars(main_tag="Accuracy", 
+        #                   tag_scalar_dict={"train_acc": train_acc,
+        #                                    "test_acc": val_acc}, 
+        #                   global_step=epoch)
         
         # Track the PyTorch model architecture
         #tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-125M")
@@ -211,7 +211,7 @@ def run():
         # writer.add_graph(model=model, input_to_model=example, verbose=True)
     
     # Close the writer
-    writer.close()
+    #writer.close()
 
     print(f'\n---History---\n{history}')
     print("##################################### Testing ############################################")
@@ -226,7 +226,7 @@ def run():
     print("##################################### Task End ############################################")
     
     # New BHG return the writer object
-    return writer
+    #return writer
 
 def create_dataset_files():
     if args.dataset == "FGBC":

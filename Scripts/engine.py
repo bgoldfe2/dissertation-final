@@ -8,9 +8,9 @@ from sklearn.metrics import f1_score
 import utils
 from common import get_parser
 
-from torchinfo import summary
-from torch.utils.tensorboard import SummaryWriter
-from typing import Dict, List
+#from torchinfo import summary
+#from torch.utils.tensorboard import SummaryWriter
+#from typing import Dict, List
 from tqdm.auto import tqdm
 
 parser = get_parser()
