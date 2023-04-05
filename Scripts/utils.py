@@ -53,17 +53,21 @@ def create_folders(args):
         os.mkdir(args.figure_path)
 
         if 'microsoft' in folder_name:
-            tmp_fold4 = args.model_path + "microsoft/"
-            tmp_fold5 = args.output_path + "microsoft/"
-            tmp_fold6 = args.figure_path  + "microsoft/"
+            tmp_fold1 = args.model_path + "microsoft/"
+            tmp_fold2 = args.output_path + "microsoft/"
+            tmp_fold3 = args.figure_path  + "microsoft/"
+            os.mkdir(tmp_fold1)
+            os.mkdir(tmp_fold2)
+            os.mkdir(tmp_fold3)
         elif 'EleutherAI' in folder_name:
-           tmp_fold4 = args.model_path + "EleutherAI/"
-           tmp_fold5 = args.output_path + "EleutherAI/"
-           tmp_fold6 = args.figure_path  + "EleutherAI/"
+            tmp_fold4 = args.model_path + "EleutherAI/"
+            tmp_fold5 = args.output_path + "EleutherAI/"
+            tmp_fold6 = args.figure_path  + "EleutherAI/"
+            os.mkdir(tmp_fold4)
+            os.mkdir(tmp_fold5)
+            os.mkdir(tmp_fold6)
            
-        os.mkdir(tmp_fold4)
-        os.mkdir(tmp_fold5)
-        os.mkdir(tmp_fold6)
+
     
     return args
 

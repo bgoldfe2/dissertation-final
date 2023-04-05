@@ -5,8 +5,8 @@
 
 import os 
  
-list_scripts = ["--pretrained_model bert-base-uncased", \
-                "--pretrained_model gpt2", \
+list_scripts = ["--pretrained_model microsoft/deberta-v3-base", \
+                "--pretrained_model EleutherAI/gpt-neo-125M", \
                 "--pretrained_model roberta-base", \
                 "--pretrained_model xlnet-base-cased", \
                 "--pretrained_model albert-base-v2"] 

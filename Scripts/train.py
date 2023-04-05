@@ -18,8 +18,6 @@ from dataset import train_validate_test_split
 import utils
 import matplotlib.pyplot as plt
 
-#parser = get_parser()
-#args = parser.parse_args()
 args = Model_Config()
 args = utils.create_folders(args)
 warnings.filterwarnings("ignore")
