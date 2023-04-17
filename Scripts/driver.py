@@ -1,4 +1,47 @@
+# Utility to drive models and ensemble combinations
+# Bruce Goldfeder
+# CSI 999, George Mason University
+# Dec 27, 2022
+
+import os 
 import argparse
+import warnings
+import torch
+import utils
+import numpy as np
+from train import run
+from Model_Config import Model_Config
+
+# Suppress copious PyTorch warnings output
+warnings.filterwarnings("ignore")
+
+
+
+# Deprecated - old method of running training using command line with args
+# def train_all_models(): 
+#     list_scripts = ["--pretrained_model microsoft/deberta-v3-base", \
+#                     "--pretrained_model EleutherAI/gpt-neo-125M", \
+#                     "--pretrained_model roberta-base", \
+#                     "--pretrained_model xlnet-base-cased", \
+#                     "--pretrained_model albert-base-v2"] 
+    
+#     for script in list_scripts: 
+#         __ = os.system("python train.py --split 'no' " + script) 
+
+# New v2.0 - Uses state as defined in driver and passing with mutation capacity for args
+def train_all_models(my_args: Model_Config):
+    # Use the run() method in train.py
+    # Iterate through model list
+    # 
+    # This method MUTATES args by changing the pretrained_model
+    #
+
+    print("type of my_args in train_all_models ", type(my_args))
+    print("model list type ", my_args.model_list)
+
+    for i in my_args.model_list:
+        #my_args.pretrained_model = i
+        run(my_args)
 
 def get_parser():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -7,10 +50,10 @@ def get_parser():
     parser.add_argument("--train_batch_size", default=16, type=int,  help='Training batch size')
     parser.add_argument("--valid_batch_size", default=32, type=int,  help='Validation batch size')
     parser.add_argument("--test_batch_size", default=32, type=int,  help='Test batch size')
-    parser.add_argument("--epochs", default=4, type=int,  help='Number of training epochs')
+    parser.add_argument("--epochs", default=1, type=int,  help='Number of training epochs')
     parser.add_argument("-lr","--learning_rate", default=2e-5, type=float,  help='The learning rate to use')
     parser.add_argument("-wd","--weight_decay", default=1e-4, type=float,  help=' Decoupled weight decay to apply')
-    parser.add_argument("--adamw_epsilon", default=1e-8, type=float,  help='Adam’s epsilon for numerical stability')
+    parser.add_argument("--adamw_epsilon", default=1e-8, type=float,  help='AdamW epsilon for numerical stability')
     parser.add_argument("--warmup_steps", default=0, type=int,  help='The number of steps for the warmup phase.')
     parser.add_argument("--classes", default=6, type=int, help='Number of output classes')
     parser.add_argument("--dropout", type=float, default=0.2, help="dropout")
@@ -36,39 +79,29 @@ def get_parser():
 
     return parser
 
-class Model_Config:
 
-    def __init__(self):
-        parser = get_parser()
-        args = parser.parse_args()
 
-        self.max_length=args.max_length         
-        self.train_batch_size=args.train_batch_size    
-        self.valid_batch_size=args.valid_batch_size     
-        self.test_batch_size=args.test_batch_size      
-        self.epochs=args.epochs
-        self.learning_rate=args.learning_rate
-        self.weight_decay=args.weight_decay
-        self.adamw_epsilon=args.adamw_epsilon
-        self.warmup_steps=args.warmup_steps
-        self.classes=args.classes
-        self.dropout=args.dropout
-        self.seed=args.seed
-        self.device=args.device
-        self.dataset=args.dataset
+if __name__=="__main__":
 
-        self.pretrained_model=args.pretrained_model
-        self.deberta_hidden=args.deberta_hidden
-        self.gpt_neo_hidden=args.gpt_neo_hidden
-        self.gpt_neo13_hidden=args.gpt_neo13_hidden
-        self.roberta_hidden=args.roberta_hidden
-        self.xlnet_hidden=args.xlnet_hidden
-        self.albert_hidden=args.albert_hidden
-        self.ensemble_type=args.ensemble_type
+    # Parse command line arguments and defaults
+    parser = get_parser()
+    raw_args = parser.parse_args()
 
-        self.run_path=args.run_path
-        self.dataset_path=args.dataset_path
-        self.model_path=args.model_path
-        self.output_path=args.output_path
-        self.figure_path=args.figure_path
-        self.split=args.split
+    # Ensure repeatability in experiments with common seed values
+    np.random.seed(raw_args.seed)
+    torch.manual_seed(raw_args.seed)
+    torch.cuda.manual_seed(raw_args.seed)
+    
+    # Declare the model list
+    #model_list = ['microsoft/deberta-v3-base', 'EleutherAI/gpt-neo-125M', 'roberta-base',\
+    #                'xlnet-base-cased', 'albert-base-v2']
+    
+    model_list = ['microsoft/deberta-v3-base']
+
+    # convert immutable args to python class instance and set up dynamic folder structure
+    args = Model_Config(raw_args)
+    args.model_list = model_list
+    my_args = utils.create_folders(args)
+
+    print("args type in driver main after create_folders ", type(my_args))
+    train_all_models(my_args)

@@ -6,24 +6,15 @@ from sklearn.metrics import f1_score
 
 # import utils
 import utils
-from common import get_parser
-
-#from torchinfo import summary
-#from torch.utils.tensorboard import SummaryWriter
-#from typing import Dict, List
 from tqdm.auto import tqdm
 
-parser = get_parser()
-args = parser.parse_args()
-np.random.seed(args.seed)
-torch.manual_seed(args.seed)
-torch.cuda.manual_seed(args.seed)
+from Model_Config import Model_Config
 
 def loss_fn(output, target):
     return nn.CrossEntropyLoss()(output, target)
 
 
-def train_fn(data_loader, model, optimizer, device, scheduler):
+def train_fn(data_loader, model, optimizer, device, scheduler, args: Model_Config):
     model.train()
     losses = utils.AverageMeter()
     progress_bar = tqdm(data_loader, total = len(data_loader))
@@ -35,7 +26,7 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
         # Get a single example of the input data to the model and stop
         #print(data)
         #asdf
-        output, target, input_ids = generate_output(data, model, device)
+        output, target, input_ids = generate_output(data, model, device, args)
 
         loss = loss_fn(output, target)
         train_losses.append(loss.item())
@@ -82,7 +73,8 @@ def eval_fn(data_loader, model, device):
     f1 = np.round(f1.item(), 4)
     return f1, np.mean(val_losses)
 
-def test_eval_fn(data_loader, model, device, pretrained_model = args.pretrained_model):
+def test_eval_fn(data_loader, model, device, args):
+    pretrained_model = args.pretrained_model
     model.eval()
     progress_bar = tqdm(data_loader, total = len(data_loader))
     val_losses = []
@@ -107,7 +99,8 @@ def test_eval_fn(data_loader, model, device, pretrained_model = args.pretrained_
     print(f'Output length --- {len(final_output)}, Prediction length --- {len(final_target)}')
     return final_output, final_target, final_probabilities
 
-def test_eval_fn_ensemble(data_loader, model, device, pretrained_model = args.pretrained_model):
+def test_eval_fn_ensemble(data_loader, model, device, args):
+    pretrained_model = args.pretrained_model
     model.eval()
     progress_bar = tqdm(data_loader, total = len(data_loader))
     val_losses = []
@@ -126,7 +119,8 @@ def test_eval_fn_ensemble(data_loader, model, device, pretrained_model = args.pr
             final_output.extend(output.cpu().detach().numpy().tolist())
     return final_output, final_target
 
-def generate_output(data, model, device, pretrained_model = args.pretrained_model):
+def generate_output(data, model, device, args):
+    pretrained_model = args.pretrained_model
     if(pretrained_model == "roberta-base" or pretrained_model == "albert-base-v2" \
           or pretrained_model == "EleutherAI/gpt-neo-125M" or pretrained_model == "microsoft/deberta-v3-base") \
             or pretrained_model == "EleutherAI/gpt-neo-1.3B":

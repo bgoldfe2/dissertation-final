@@ -3,17 +3,12 @@ import torch.nn as nn
 import numpy as np
 from transformers import AutoModel 
 
-from common import get_parser
-
-parser = get_parser()
-args = parser.parse_args()
-np.random.seed(args.seed)
-torch.manual_seed(args.seed)
-torch.cuda.manual_seed(args.seed)
+# TODO Combine all these classes into one with conditional elements to differentiate
 
 class DeBertaFGBC(nn.Module):
-    def __init__(self, pretrained_model = args.pretrained_model):
+    def __init__(self, args):
         super().__init__()
+        pretrained_model = args.pretrained_model
         self.DeBerta = AutoModel.from_pretrained(pretrained_model)
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.deberta_hidden, 64)
@@ -65,8 +60,9 @@ class DeBertaFGBC(nn.Module):
 
 
 class GPT_NeoFGBC(nn.Module):
-    def __init__(self, pretrained_model = args.pretrained_model):
+    def __init__(self, args):
         super().__init__()
+        pretrained_model = args.pretrained_model
         self.GPT2 = AutoModel.from_pretrained(pretrained_model)
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.gpt_neo_hidden, 64)
@@ -99,8 +95,9 @@ class GPT_NeoFGBC(nn.Module):
         return mean_last_hidden_state
 
 class GPT_Neo13FGBC(nn.Module):
-    def __init__(self, pretrained_model = args.pretrained_model):
+    def __init__(self, args):
         super().__init__()
+        pretrained_model = args.pretrained_model
         self.GPT2 = AutoModel.from_pretrained(pretrained_model)
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.gpt_neo13_hidden, 64)
@@ -133,8 +130,9 @@ class GPT_Neo13FGBC(nn.Module):
         return mean_last_hidden_state
 
 class RobertaFGBC(nn.Module):
-    def __init__(self, pretrained_model = args.pretrained_model):
+    def __init__(self, args):
         super().__init__()
+        pretrained_model = args.pretrained_model
         self.Roberta = AutoModel.from_pretrained(pretrained_model)
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.roberta_hidden, 64)
@@ -160,8 +158,9 @@ class RobertaFGBC(nn.Module):
         return output
 
 class AlbertFGBC(nn.Module):
-    def __init__(self, pretrained_model = args.pretrained_model):
+    def __init__(self, args):
         super().__init__()
+        pretrained_model = args.pretrained_model
         self.albert = AutoModel.from_pretrained(pretrained_model)
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.albert_hidden, 64)
@@ -194,8 +193,9 @@ class AlbertFGBC(nn.Module):
         return mean_last_hidden_state
 
 class XLNetFGBC(nn.Module):
-    def __init__(self, pretrained_model = args.pretrained_model):
+    def __init__(self, args):
         super().__init__()
+        pretrained_model = args.pretrained_model
         self.XLNet = AutoModel.from_pretrained(pretrained_model)
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.xlnet_hidden, 64)

@@ -3,16 +3,11 @@ import pandas as pd
 import numpy as np
 from transformers import AutoTokenizer
 
-from common import get_parser
-parser = get_parser()
-args = parser.parse_args()
-
-np.random.seed(args.seed)
-torch.manual_seed(args.seed)
-torch.cuda.manual_seed(args.seed)
 
 class DatasetDeberta:
-    def __init__(self, text, target, pretrained_model = args.pretrained_model):
+    def __init__(self, text, target, args):
+        pretrained_model = args.pretrained_model
+        print("in dataset_deberta this is pretrained model ", pretrained_model)
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.max_length = args.max_length
@@ -45,7 +40,8 @@ class DatasetDeberta:
 
 
 class DatasetGPT_Neo:
-    def __init__(self, text, target, pretrained_model = args.pretrained_model):
+    def __init__(self, text, target, args):
+        pretrained_model = args.pretrained_model
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.tokenizer.pad_token = "[PAD]"
@@ -76,7 +72,8 @@ class DatasetGPT_Neo:
         }
 
 class DatasetGPT_Neo13:
-    def __init__(self, text, target, pretrained_model = args.pretrained_model):
+    def __init__(self, text, target, args):
+        pretrained_model = args.pretrained_model
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.tokenizer.pad_token = "[PAD]"
@@ -107,7 +104,8 @@ class DatasetGPT_Neo13:
         }
 
 class DatasetRoberta:
-    def __init__(self, text, target, pretrained_model = args.pretrained_model):
+    def __init__(self, text, target, args):
+        pretrained_model = args.pretrained_model
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.max_length = args.max_length
@@ -137,7 +135,8 @@ class DatasetRoberta:
         }
 
 class DatasetAlbert:
-    def __init__(self, text, target, pretrained_model = args.pretrained_model):
+    def __init__(self, text, target, args):
+        pretrained_model = args.pretrained_model
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.max_length = args.max_length
@@ -167,7 +166,8 @@ class DatasetAlbert:
         }
 
 class DatasetXLNet:
-    def __init__(self, text, target, pretrained_model = args.pretrained_model):
+    def __init__(self, text, target, args):
+        pretrained_model = args.pretrained_model
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
         self.max_length = args.max_length
@@ -209,21 +209,3 @@ def train_validate_test_split(df, train_percent=0.6, validate_percent=.2, seed=7
     validate = df.iloc[perm[train_end:validate_end]]
     test = df.iloc[perm[validate_end:]]
     return train, validate, test
-
-
-if __name__=="__main__":
-    tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-neo-1.3B")
-    print("This is the tokenizer - ",tokenizer("Hello world"))
-    
-    df = pd.read_csv(args.dataset_path+"data.csv").dropna()
-    
-    #Splitting the dataset
-    train_df, valid_df, test_df = train_validate_test_split(df)
-    train_df.to_csv(args.dataset_path+'train.csv')
-    valid_df.to_csv(args.dataset_path+'valid.csv')
-    test_df.to_csv(args.dataset_path+'test.csv')
-
-    print(set(df['label'].values))
-    dataset = DatasetGPT_Neo13(text=df.text.values, target=df.target.values)
-    print(df.iloc[1]['text'])
-    print(dataset[1])

@@ -5,12 +5,12 @@ from sklearn.metrics import confusion_matrix, classification_report, matthews_co
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc
 
-from common import get_parser
-from model import DeBertaFGBC, RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, GPT_Neo13FGBC
+from model import DeBertaFGBC#, RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, GPT_Neo13FGBC
 from dataset import DatasetDeberta, DatasetRoberta, DatasetXLNet, DatasetAlbert, DatasetGPT_Neo, DatasetGPT_Neo13
 
 import os
 from datetime import datetime
+from Model_Config import Model_Config
 
 class AverageMeter:
     """Computes and stores the average and current value"""
@@ -29,20 +29,24 @@ class AverageMeter:
         self.count += n
         self.avg = self.sum / self.count
 
-def create_folders(args):
+def create_folders(args: Model_Config) -> Model_Config:
     # Create the Runs Experiment folder location for Model,s Output, Figures
     # get current date and time
     # TODO move to utils
 
-    current_datetime = str(datetime.now()).replace(" ","_")
+    # Get current time, remove microseconds, replace spaces with underscores
+    current_datetime = str(datetime.now().replace(microsecond=0)).replace(" ","_")
     
     # create a file object along with extension
-    folder_name = "../Runs/" + current_datetime + "_" + args.pretrained_model.replace('/','_')
+    folder_name = "../Runs/" + current_datetime.replace(':','_') + "_" + args.pretrained_model.replace('/','_')
     n=7 # number of letters in Scripts which is the folder we should be running from
     cur_dir = os.getcwd()
+    print(cur_dir)
+    print('folder name ', folder_name)
     if cur_dir[len(cur_dir)-n:] != 'Scripts':
         print('Run train.py from Scripts Directory')        
     else:
+        #folder_name = "fubar"
         os.mkdir(folder_name) 
         print("made directory!!!!! ",folder_name)
         args.model_path = folder_name + "/Models/"
@@ -66,9 +70,10 @@ def create_folders(args):
             os.mkdir(tmp_fold4)
             os.mkdir(tmp_fold5)
             os.mkdir(tmp_fold6)
-           
 
-    
+    print('args type ', type(args))
+    print('args.model path value ', args.model_path)
+
     return args
 
 def set_device(args):
@@ -84,7 +89,7 @@ def set_device(args):
 def sorting_function(val):
     return val[1]    
 
-def load_prediction():
+def load_prediction(args):
     deberta_path = (f'{args.output_path}microsoft/deberta_v3_base.csv')
     xlnet_path = (f'{args.output_path}xlnet-base-cased.csv')
     roberta_path = (f'{args.output_path}roberta-base.csv')
@@ -108,7 +113,7 @@ def print_stats(max_vote_df, deberta, xlnet, roberta, albert):
     print(f'---Roberta---\n{roberta.y_pred.value_counts()}')
     print(f'---albert---\n{albert.y_pred.value_counts()}')
 
-def evaluate_ensemble(max_vote_df):
+def evaluate_ensemble(max_vote_df, args):
     y_test = max_vote_df['target'].values
     y_pred = max_vote_df['pred'].values
     acc = accuracy_score(y_test, y_pred)
@@ -129,7 +134,7 @@ def evaluate_ensemble(max_vote_df):
     conf_mat = confusion_matrix(y_test,y_pred)
     print(conf_mat)
 
-def generate_dataset_for_ensembling(pretrained_model, df):
+def generate_dataset_for_ensembling(pretrained_model, df, args):
     if(pretrained_model == "microsoft/deberta-v3-base"):
         dataset = DatasetDeberta(text=df.text.values, target=df.target.values, pretrained_model="microsoft/deberta-v3-base")
     elif(pretrained_model== "roberta-base"):
@@ -151,7 +156,7 @@ def generate_dataset_for_ensembling(pretrained_model, df):
 
     return data_loader
 
-def load_models():
+def load_models(args):
     deberta_path = (f'{args.model_path}microsoft/deberta-v3-base_Best_Val_Acc.bin')
     xlnet_path = (f'{args.model_path}xlnet-base-cased_Best_Val_Acc.bin')
     roberta_path = (f'{args.model_path}roberta-base_Best_Val_Acc.bin')
