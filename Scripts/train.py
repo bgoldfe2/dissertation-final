@@ -145,7 +145,7 @@ def run(args: Model_Config):
 
         train_acc, train_loss = engine.train_fn(train_data_loader, model, optimizer, device, scheduler, args)
         print(f'Epoch {epoch + 1} --- Training loss: {train_loss} Training accuracy: {train_acc}')
-        val_acc, val_loss = engine.eval_fn(valid_data_loader, model, device)
+        val_acc, val_loss = engine.eval_fn(valid_data_loader, model, device, args)
         print(f'Epoch {epoch + 1} --- Validation loss: {val_loss} Validation accuracy: {val_acc}')
         history['train_acc'].append(train_acc)
         history['train_loss'].append(train_loss)
@@ -162,7 +162,7 @@ def run(args: Model_Config):
         
     print(f'\n---History---\n{history}')
     print("##################################### Testing ############################################")
-    pred_test, acc = test_evaluate(test_df, test_data_loader, model, device,args)
+    pred_test, acc = test_evaluate(test_df, test_data_loader, model, device, args)
     pred_test.to_csv(f'{args.output_path}{args.pretrained_model}---test_acc---{acc}.csv', index = False)
 
     plt_acc = save_acc_curves(history)

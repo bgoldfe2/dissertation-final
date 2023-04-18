@@ -52,7 +52,7 @@ def train_fn(data_loader, model, optimizer, device, scheduler, args: Model_Confi
     f1 = np.round(f1.item(), 4)
     return f1, np.mean(train_losses)
 
-def eval_fn(data_loader, model, device):
+def eval_fn(data_loader, model, device, args: Model_Config):
     model.eval()
     progress_bar = tqdm(data_loader, total = len(data_loader))
     val_losses = []
@@ -61,7 +61,7 @@ def eval_fn(data_loader, model, device):
 
     with torch.no_grad():
         for ii, data in enumerate(progress_bar):
-            output, target, input_ids = generate_output(data, model, device)
+            output, target, input_ids = generate_output(data, model, device, args)
 
             loss = loss_fn(output, target)
             output = torch.log_softmax(output, dim = 1)
@@ -86,7 +86,7 @@ def test_eval_fn(data_loader, model, device, args):
 
     with torch.no_grad():
         for ii, data in enumerate(progress_bar):
-            output, target, input_ids = generate_output(data, model, device, pretrained_model)
+            output, target, input_ids = generate_output(data, model, device, args)
 
             loss = loss_fn(output, target)
             output = torch.log_softmax(output, dim = 1)
@@ -119,7 +119,7 @@ def test_eval_fn_ensemble(data_loader, model, device, args):
             final_output.extend(output.cpu().detach().numpy().tolist())
     return final_output, final_target
 
-def generate_output(data, model, device, args):
+def generate_output(data, model, device, args: Model_Config):
     pretrained_model = args.pretrained_model
     if(pretrained_model == "roberta-base" or pretrained_model == "albert-base-v2" \
           or pretrained_model == "EleutherAI/gpt-neo-125M" or pretrained_model == "microsoft/deberta-v3-base") \

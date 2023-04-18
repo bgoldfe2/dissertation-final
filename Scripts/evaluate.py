@@ -7,14 +7,15 @@ from sklearn import svm, metrics
 import matplotlib.pyplot as plt
 
 from engine import test_eval_fn
+from Model_Config import Model_Config
 
 from utils import set_device, load_models, generate_dataset_for_ensembling, calc_roc_auc
 
-def test_evaluate(test_df, test_data_loader, model, device, args):
+def test_evaluate(test_df, test_data_loader, model, device, args: Model_Config):
     # modified using the Model_Config instance args as the state reference
     pretrained_model = args.pretrained_model
     print(f'\nEvaluating: ---{pretrained_model}---\n')
-    y_pred, y_test, y_proba = test_eval_fn(test_data_loader, model, device, pretrained_model)
+    y_pred, y_test, y_proba = test_eval_fn(test_data_loader, model, device, args)
     acc = accuracy_score(y_test, y_pred)
     mcc = matthews_corrcoef(y_test, y_pred)
     precision = precision_score(y_test, y_pred, average='weighted')

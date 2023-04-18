@@ -31,45 +31,54 @@ class AverageMeter:
 
 def create_folders(args: Model_Config) -> Model_Config:
     # Create the Runs Experiment folder location for Model,s Output, Figures
-    # get current date and time
-    # TODO move to utils
-
     # Get current time, remove microseconds, replace spaces with underscores
     current_datetime = str(datetime.now().replace(microsecond=0)).replace(" ","_")
     
+    
+    # TODO make a run folder with sub-runs for different models inside it
     # create a file object along with extension
-    folder_name = "../Runs/" + current_datetime.replace(':','_') + "_" + args.pretrained_model.replace('/','_')
+    # NOTE: for multi-architecture runs this run will append only the first model type
+    folder_name = "../Runs/" + current_datetime.replace(':','_') + "--" + args.pretrained_model.split('/',1)[1]
     n=7 # number of letters in Scripts which is the folder we should be running from
     cur_dir = os.getcwd()
     print(cur_dir)
     print('folder name ', folder_name)
+    
+    # Parse out any subfolders for model descriptors e.g. microsoft/DeBERTa
+    foo = args.model_list
+    subfolders = []
+    for bar in foo:
+        if '/' in bar:
+            #print('in foo')
+            fubar = bar.split('/',1)[0]
+            subfolders.append(fubar)
+    print(subfolders)
+
+    # High level folders defined
+    fld = ['/Models/', '/Output/', '/Figures/']
+    args.model_path = folder_name + "/Models/"
+    args.output_path = folder_name + "/Output/"
+    args.figure_path = folder_name  + "/Figures/"
+    print('args.model_path are\n',args.model_path)
+    
     if cur_dir[len(cur_dir)-n:] != 'Scripts':
         print('Run train.py from Scripts Directory')        
     else:
-        #folder_name = "fubar"
-        os.mkdir(folder_name) 
-        print("made directory!!!!! ",folder_name)
-        args.model_path = folder_name + "/Models/"
-        args.output_path = folder_name + "/Output/"
-        args.figure_path = folder_name  + "/Figures/"
-        os.mkdir(args.model_path)
-        os.mkdir(args.output_path)
-        os.mkdir(args.figure_path)
+        # Make the parent folder for this run
+        os.mkdir(folder_name)
 
-        if 'microsoft' in folder_name:
-            tmp_fold1 = args.model_path + "microsoft/"
-            tmp_fold2 = args.output_path + "microsoft/"
-            tmp_fold3 = args.figure_path  + "microsoft/"
-            os.mkdir(tmp_fold1)
-            os.mkdir(tmp_fold2)
-            os.mkdir(tmp_fold3)
-        elif 'EleutherAI' in folder_name:
-            tmp_fold4 = args.model_path + "EleutherAI/"
-            tmp_fold5 = args.output_path + "EleutherAI/"
-            tmp_fold6 = args.figure_path  + "EleutherAI/"
-            os.mkdir(tmp_fold4)
-            os.mkdir(tmp_fold5)
-            os.mkdir(tmp_fold6)
+        # Create the subfolders as needed for models
+        top_list = []
+        for top in fld:
+            fld_name = folder_name + top
+            print(fld_name)
+            top_list.append(fld_name)
+            os.mkdir(fld_name)
+        for sub in subfolders:
+            for top in top_list:
+                sub_name = top + sub + '/'
+                print(sub_name)
+                os.mkdir(sub_name)
 
     print('args type ', type(args))
     print('args.model path value ', args.model_path)

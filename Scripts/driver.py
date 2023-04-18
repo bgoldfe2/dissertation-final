@@ -15,8 +15,6 @@ from Model_Config import Model_Config
 # Suppress copious PyTorch warnings output
 warnings.filterwarnings("ignore")
 
-
-
 # Deprecated - old method of running training using command line with args
 # def train_all_models(): 
 #     list_scripts = ["--pretrained_model microsoft/deberta-v3-base", \
@@ -40,7 +38,7 @@ def train_all_models(my_args: Model_Config):
     print("model list type ", my_args.model_list)
 
     for i in my_args.model_list:
-        #my_args.pretrained_model = i
+        my_args.pretrained_model = i
         run(my_args)
 
 def get_parser():
@@ -93,15 +91,16 @@ if __name__=="__main__":
     torch.cuda.manual_seed(raw_args.seed)
     
     # Declare the model list
-    #model_list = ['microsoft/deberta-v3-base', 'EleutherAI/gpt-neo-125M', 'roberta-base',\
-    #                'xlnet-base-cased', 'albert-base-v2']
+    model_list = ['microsoft/deberta-v3-base', 'EleutherAI/gpt-neo-125M', 'roberta-base',\
+                    'xlnet-base-cased', 'albert-base-v2']
     
-    model_list = ['microsoft/deberta-v3-base']
+    #model_list = ['microsoft/deberta-v3-base']
 
     # convert immutable args to python class instance and set up dynamic folder structure
     args = Model_Config(raw_args)
     args.model_list = model_list
     my_args = utils.create_folders(args)
 
-    print("args type in driver main after create_folders ", type(my_args))
-    train_all_models(my_args)
+
+    print("args type in driver main after create_folders ", type(args))
+    train_all_models(args)
