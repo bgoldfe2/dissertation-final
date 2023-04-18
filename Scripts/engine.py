@@ -1,24 +1,20 @@
 import torch
 import torch.nn as nn
-from tqdm import tqdm
+#from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import f1_score
 
 # import utils
 import utils
-from common import get_parser
+from tqdm.auto import tqdm
 
-parser = get_parser()
-args = parser.parse_args()
-np.random.seed(args.seed)
-torch.manual_seed(args.seed)
-torch.cuda.manual_seed(args.seed)
+from Model_Config import Model_Config
 
 def loss_fn(output, target):
     return nn.CrossEntropyLoss()(output, target)
 
 
-def train_fn(data_loader, model, optimizer, device, scheduler):
+def train_fn(data_loader, model, optimizer, device, scheduler, args: Model_Config):
     model.train()
     losses = utils.AverageMeter()
     progress_bar = tqdm(data_loader, total = len(data_loader))
@@ -27,15 +23,22 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
     final_output = []
 
     for ii, data in enumerate(progress_bar):
-        output, target, input_ids = generate_output(data, model, device)
+        # Get a single example of the input data to the model and stop
+        #print(data)
+        #asdf
+        output, target, input_ids = generate_output(data, model, device, args)
 
         loss = loss_fn(output, target)
         train_losses.append(loss.item())
         output = torch.log_softmax(output, dim = 1)
         output = torch.argmax(output, dim = 1)
        
+
+        # BHG need to add in some print statements to understand ouput, target and input_ids
+        # and to uncomment the modulus output during training below
+
         # if(ii%100 == 0 and ii!=0) or (ii == len(data_loader)-1):
-        #     print((f'ii={ii}, Train F1={f1},Train loss={loss.item()}, time={end-start}'))
+        # print((f'ii={ii}, Train F1={f1},Train loss={loss.item()}, time={end-start}'))
 
         loss.backward() # Calculate gradients based on loss
         nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
@@ -49,7 +52,7 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
     f1 = np.round(f1.item(), 4)
     return f1, np.mean(train_losses)
 
-def eval_fn(data_loader, model, device):
+def eval_fn(data_loader, model, device, args: Model_Config):
     model.eval()
     progress_bar = tqdm(data_loader, total = len(data_loader))
     val_losses = []
@@ -58,7 +61,7 @@ def eval_fn(data_loader, model, device):
 
     with torch.no_grad():
         for ii, data in enumerate(progress_bar):
-            output, target, input_ids = generate_output(data, model, device)
+            output, target, input_ids = generate_output(data, model, device, args)
 
             loss = loss_fn(output, target)
             output = torch.log_softmax(output, dim = 1)
@@ -70,7 +73,8 @@ def eval_fn(data_loader, model, device):
     f1 = np.round(f1.item(), 4)
     return f1, np.mean(val_losses)
 
-def test_eval_fn(data_loader, model, device, pretrained_model = args.pretrained_model):
+def test_eval_fn(data_loader, model, device, args):
+    pretrained_model = args.pretrained_model
     model.eval()
     progress_bar = tqdm(data_loader, total = len(data_loader))
     val_losses = []
@@ -82,7 +86,7 @@ def test_eval_fn(data_loader, model, device, pretrained_model = args.pretrained_
 
     with torch.no_grad():
         for ii, data in enumerate(progress_bar):
-            output, target, input_ids = generate_output(data, model, device, pretrained_model)
+            output, target, input_ids = generate_output(data, model, device, args)
 
             loss = loss_fn(output, target)
             output = torch.log_softmax(output, dim = 1)
@@ -95,7 +99,8 @@ def test_eval_fn(data_loader, model, device, pretrained_model = args.pretrained_
     print(f'Output length --- {len(final_output)}, Prediction length --- {len(final_target)}')
     return final_output, final_target, final_probabilities
 
-def test_eval_fn_ensemble(data_loader, model, device, pretrained_model = args.pretrained_model):
+def test_eval_fn_ensemble(data_loader, model, device, args):
+    pretrained_model = args.pretrained_model
     model.eval()
     progress_bar = tqdm(data_loader, total = len(data_loader))
     val_losses = []
@@ -114,7 +119,8 @@ def test_eval_fn_ensemble(data_loader, model, device, pretrained_model = args.pr
             final_output.extend(output.cpu().detach().numpy().tolist())
     return final_output, final_target
 
-def generate_output(data, model, device, pretrained_model = args.pretrained_model):
+def generate_output(data, model, device, args: Model_Config):
+    pretrained_model = args.pretrained_model
     if(pretrained_model == "roberta-base" or pretrained_model == "albert-base-v2" \
           or pretrained_model == "EleutherAI/gpt-neo-125M" or pretrained_model == "microsoft/deberta-v3-base") \
             or pretrained_model == "EleutherAI/gpt-neo-1.3B":

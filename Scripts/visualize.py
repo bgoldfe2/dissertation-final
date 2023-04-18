@@ -1,10 +1,5 @@
 import matplotlib.pyplot as plt
 
-from common import get_parser
-
-parser = get_parser()
-args = parser.parse_args()
-
 def save_acc_curves(history):
     plt.plot(history['train_acc'], label='train accuracy')
     plt.plot(history['val_acc'], label='validation accuracy')
@@ -13,8 +8,9 @@ def save_acc_curves(history):
     plt.xlabel('Epoch')
     plt.legend()
     plt.ylim([0, 1])
-    plt.savefig(f"{args.figure_path}{args.pretrained_model}---acc---.pdf")
+    #plt.savefig(f"{args.figure_path}{args.pretrained_model}---acc---.pdf")
     plt.clf()
+    return plt
 
 def save_loss_curves(history):
     plt.plot(history['train_loss'], label='train loss')
@@ -24,7 +20,8 @@ def save_loss_curves(history):
     plt.xlabel('Epoch')
     plt.legend()
     plt.ylim([0, 1])
-    plt.savefig(f"{args.figure_path}{args.pretrained_model}---loss---.pdf")
+    #plt.savefig(f"{args.figure_path}{args.pretrained_model}---loss---.pdf")
     plt.clf()
+    return plt
 
 # This version adds the plt.clf() command at the end

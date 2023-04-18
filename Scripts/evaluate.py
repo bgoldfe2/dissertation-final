@@ -7,20 +7,15 @@ from sklearn import svm, metrics
 import matplotlib.pyplot as plt
 
 from engine import test_eval_fn
-from common import get_parser
+from Model_Config import Model_Config
 
 from utils import set_device, load_models, generate_dataset_for_ensembling, calc_roc_auc
-#from model import BertFGBC
 
-parser = get_parser()
-args = parser.parse_args()
-np.random.seed(args.seed)
-torch.manual_seed(args.seed)
-torch.cuda.manual_seed(args.seed)
-
-def test_evaluate(test_df, test_data_loader, model, device, pretrained_model = args.pretrained_model):
+def test_evaluate(test_df, test_data_loader, model, device, args: Model_Config):
+    # modified using the Model_Config instance args as the state reference
+    pretrained_model = args.pretrained_model
     print(f'\nEvaluating: ---{pretrained_model}---\n')
-    y_pred, y_test, y_proba = test_eval_fn(test_data_loader, model, device, pretrained_model)
+    y_pred, y_test, y_proba = test_eval_fn(test_data_loader, model, device, args)
     acc = accuracy_score(y_test, y_pred)
     mcc = matthews_corrcoef(y_test, y_pred)
     precision = precision_score(y_test, y_pred, average='weighted')
@@ -35,57 +30,14 @@ def test_evaluate(test_df, test_data_loader, model, device, pretrained_model = a
     print('classification_report: ', classification_report(y_test, y_pred, digits=4))
     test_df['y_pred'] = y_pred
     pred_test = test_df[['text', 'label', 'target', 'y_pred']]
-    pred_test.to_csv(f'{args.output_path}{pretrained_model}---test_acc---{acc}.csv', index = False)
+    #pred_test.to_csv(f'{args.output_path}{pretrained_model}---test_acc---{acc}.csv', index = False)
 
     conf_mat = confusion_matrix(y_test,y_pred)
     print(conf_mat)
     # auc evaluation new for this version
     #ROC Curve
-    calc_roc_auc(np.array(y_test), np.array(y_proba))
 
-def evaluate_all_models():
-    bert, xlnet, roberta, albert = load_models()
-    test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
-    device = set_device()
+    calc_roc_auc(np.array(y_test), np.array(y_proba), args)
 
-    bert.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="bert-base-uncased", df =test_df)
-    test_evaluate(test_df, test_data_loader, bert, device, pretrained_model="bert-base-uncased")
-    del bert, test_data_loader
-
-    xlnet.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="xlnet-base-cased", df=test_df)
-    test_evaluate(test_df, test_data_loader, xlnet, device, pretrained_model="xlnet-base-cased")
-    del xlnet, test_data_loader
-
-    roberta.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="roberta-base", df=test_df)
-    test_evaluate(test_df, test_data_loader, roberta, device, pretrained_model="roberta-base")
-    del roberta, test_data_loader
-
-    albert.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="albert-base-v2", df=test_df)
-    test_evaluate(test_df, test_data_loader, albert, device, pretrained_model="albert-base-v2")
-    del albert, test_data_loader
-
-if __name__ == "__main__":
-    evaluate_all_models()
-
-    # BHG I found out why - at the end of the training it just sends the last model already in memory on device
-    #     What they discovered below is that for 'testing' after the training you need to get the best model
-    #     not the last one run from the last epoch
-
-    # BHG for some reason this main does not call evaluate_all_models
-    #bert_path = (f'{args.model_path}bert-base-uncased_Best_Val_Acc.bin')
-    #bert = BertFGBC(pretrained_model="bert-base-uncased")
-    #bert.load_state_dict(torch.load(bert_path))
-    
-    #test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
-    #device = set_device()
-
-    #bert.to(device)
-    #test_data_loader = generate_dataset_for_ensembling(pretrained_model="bert-base-uncased", df =test_df)
-    #test_evaluate(test_df, test_data_loader, bert, device, pretrained_model="bert-base-uncased")
-    #del bert, test_data_loader
-    
-# This new version has a different main which seems to just run BERT    
+    # Return the test results for saving in train.py
+    return pred_test, acc

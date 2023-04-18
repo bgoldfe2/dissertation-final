@@ -10,13 +10,6 @@ from evaluate import test_evaluate
 from engine import test_eval_fn_ensemble, test_eval_fn
 
 from utils import sorting_function, evaluate_ensemble, print_stats, load_prediction, set_device, load_models, generate_dataset_for_ensembling, calc_roc_auc
-from common import get_parser
-
-parser = get_parser()
-args = parser.parse_args()
-np.random.seed(args.seed)
-torch.manual_seed(args.seed)
-torch.cuda.manual_seed(args.seed)
 
 def max_vote():
     print(f'\n---Max voting ensemble---\n')
@@ -99,8 +92,9 @@ def max_vote3():
     max_vote_df['pred'] = preds
 
     evaluate_ensemble(max_vote_df)
+
 # BHG Added new function
-def rocauc():
+def rocauc(args):
     deberta, xlnet, roberta, albert, gptneo = load_models()
     test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
     device = set_device()
@@ -137,7 +131,7 @@ def rocauc():
     
     
 
-def averaging():
+def averaging(args):
     deberta, xlnet, roberta, albert, gptneo = load_models()
     test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
     device = set_device()
@@ -200,7 +194,7 @@ def averaging():
     print(conf_mat)
     
 
-def averaging3():
+def averaging3(args):
     xlnet, roberta, gptneo = load_models()
     test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
     device = set_device()
@@ -251,21 +245,3 @@ def averaging3():
 
     conf_mat = confusion_matrix(y_test,y_pred)
     print(conf_mat)
-
-
-
-
-
-
-if __name__=="__main__":
-    if args.ensemble_type == "max-voting":
-        max_vote()
-    elif args.ensemble_type == "rocauc":
-        rocauc()
-    elif args.ensemble_type == "mv3":
-        max_vote3()
-    elif args.ensemble_type == "pa3":
-        averaging3()
-    else:
-        averaging()
-

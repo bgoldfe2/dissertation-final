@@ -5,15 +5,12 @@ from sklearn.metrics import confusion_matrix, classification_report, matthews_co
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc
 
-from common import get_parser
-from model import DeBertaFGBC, RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, GPT_Neo13FGBC
+from model import DeBertaFGBC#, RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, GPT_Neo13FGBC
 from dataset import DatasetDeberta, DatasetRoberta, DatasetXLNet, DatasetAlbert, DatasetGPT_Neo, DatasetGPT_Neo13
 
-parser = get_parser()
-args = parser.parse_args()
-np.random.seed(args.seed)
-torch.manual_seed(args.seed)
-torch.cuda.manual_seed(args.seed)
+import os
+from datetime import datetime
+from Model_Config import Model_Config
 
 class AverageMeter:
     """Computes and stores the average and current value"""
@@ -32,7 +29,63 @@ class AverageMeter:
         self.count += n
         self.avg = self.sum / self.count
 
-def set_device():
+def create_folders(args: Model_Config) -> Model_Config:
+    # Create the Runs Experiment folder location for Model,s Output, Figures
+    # Get current time, remove microseconds, replace spaces with underscores
+    current_datetime = str(datetime.now().replace(microsecond=0)).replace(" ","_")
+    
+    
+    # TODO make a run folder with sub-runs for different models inside it
+    # create a file object along with extension
+    # NOTE: for multi-architecture runs this run will append only the first model type
+    folder_name = "../Runs/" + current_datetime.replace(':','_') + "--" + args.pretrained_model.split('/',1)[1]
+    n=7 # number of letters in Scripts which is the folder we should be running from
+    cur_dir = os.getcwd()
+    print(cur_dir)
+    print('folder name ', folder_name)
+    
+    # Parse out any subfolders for model descriptors e.g. microsoft/DeBERTa
+    foo = args.model_list
+    subfolders = []
+    for bar in foo:
+        if '/' in bar:
+            #print('in foo')
+            fubar = bar.split('/',1)[0]
+            subfolders.append(fubar)
+    print(subfolders)
+
+    # High level folders defined
+    fld = ['/Models/', '/Output/', '/Figures/']
+    args.model_path = folder_name + "/Models/"
+    args.output_path = folder_name + "/Output/"
+    args.figure_path = folder_name  + "/Figures/"
+    print('args.model_path are\n',args.model_path)
+    
+    if cur_dir[len(cur_dir)-n:] != 'Scripts':
+        print('Run train.py from Scripts Directory')        
+    else:
+        # Make the parent folder for this run
+        os.mkdir(folder_name)
+
+        # Create the subfolders as needed for models
+        top_list = []
+        for top in fld:
+            fld_name = folder_name + top
+            print(fld_name)
+            top_list.append(fld_name)
+            os.mkdir(fld_name)
+        for sub in subfolders:
+            for top in top_list:
+                sub_name = top + sub + '/'
+                print(sub_name)
+                os.mkdir(sub_name)
+
+    print('args type ', type(args))
+    print('args.model path value ', args.model_path)
+
+    return args
+
+def set_device(args):
     device = ""
     if(args.device=="cpu"):
         device = "cpu"
@@ -45,7 +98,7 @@ def set_device():
 def sorting_function(val):
     return val[1]    
 
-def load_prediction():
+def load_prediction(args):
     deberta_path = (f'{args.output_path}microsoft/deberta_v3_base.csv')
     xlnet_path = (f'{args.output_path}xlnet-base-cased.csv')
     roberta_path = (f'{args.output_path}roberta-base.csv')
@@ -69,7 +122,7 @@ def print_stats(max_vote_df, deberta, xlnet, roberta, albert):
     print(f'---Roberta---\n{roberta.y_pred.value_counts()}')
     print(f'---albert---\n{albert.y_pred.value_counts()}')
 
-def evaluate_ensemble(max_vote_df):
+def evaluate_ensemble(max_vote_df, args):
     y_test = max_vote_df['target'].values
     y_pred = max_vote_df['pred'].values
     acc = accuracy_score(y_test, y_pred)
@@ -90,7 +143,7 @@ def evaluate_ensemble(max_vote_df):
     conf_mat = confusion_matrix(y_test,y_pred)
     print(conf_mat)
 
-def generate_dataset_for_ensembling(pretrained_model, df):
+def generate_dataset_for_ensembling(pretrained_model, df, args):
     if(pretrained_model == "microsoft/deberta-v3-base"):
         dataset = DatasetDeberta(text=df.text.values, target=df.target.values, pretrained_model="microsoft/deberta-v3-base")
     elif(pretrained_model== "roberta-base"):
@@ -112,7 +165,7 @@ def generate_dataset_for_ensembling(pretrained_model, df):
 
     return data_loader
 
-def load_models():
+def load_models(args):
     deberta_path = (f'{args.model_path}microsoft/deberta-v3-base_Best_Val_Acc.bin')
     xlnet_path = (f'{args.model_path}xlnet-base-cased_Best_Val_Acc.bin')
     roberta_path = (f'{args.model_path}roberta-base_Best_Val_Acc.bin')
@@ -125,7 +178,7 @@ def load_models():
     roberta = RobertaFGBC(pretrained_model="roberta-base")
     albert = AlbertFGBC(pretrained_model="albert-base-v2")
     gpt_neo = GPT_NeoFGBC(pretrained_model="EleutherAI/gpt-neo-125M")
-    gpt_neo13 = GPT_NeoFGBC13(pretrained_model="EleutherAI/gpt-neo-1.3B")
+    gpt_neo13 = GPT_Neo13FGBC(pretrained_model="EleutherAI/gpt-neo-1.3B")
 
     deberta.load_state_dict(torch.load(deberta_path))
     xlnet.load_state_dict(torch.load(xlnet_path))
@@ -141,7 +194,7 @@ def oneHot(arr):
     b[np.arange(arr.size),arr] = 1
     return b
 
-def calc_roc_auc(all_labels, all_logits, name=None):
+def calc_roc_auc(all_labels, all_logits, args, name=None, ):
     attributes = []
     if(args.classes==6):
        attributes = ['Age', 'Ethnicity', 'Gender', 'Notcb', 'Others', 'Religion']
