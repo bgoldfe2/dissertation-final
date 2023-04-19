@@ -34,22 +34,18 @@ def create_folders(args: Model_Config) -> Model_Config:
     # Get current time, remove microseconds, replace spaces with underscores
     current_datetime = str(datetime.now().replace(microsecond=0)).replace(" ","_")
     
-    
-    # TODO make a run folder with sub-runs for different models inside it
-    # create a file object along with extension
     # NOTE: for multi-architecture runs this run will append only the first model type
     folder_name = "../Runs/" + current_datetime.replace(':','_') + "--" + args.pretrained_model.split('/',1)[1]
     n=7 # number of letters in Scripts which is the folder we should be running from
     cur_dir = os.getcwd()
-    print(cur_dir)
-    print('folder name ', folder_name)
+    #print(cur_dir)
+    #print('folder name ', folder_name)
     
     # Parse out any subfolders for model descriptors e.g. microsoft/DeBERTa
     foo = args.model_list
     subfolders = []
     for bar in foo:
         if '/' in bar:
-            #print('in foo')
             fubar = bar.split('/',1)[0]
             subfolders.append(fubar)
     print(subfolders)
@@ -62,7 +58,7 @@ def create_folders(args: Model_Config) -> Model_Config:
     print('args.model_path are\n',args.model_path)
     
     if cur_dir[len(cur_dir)-n:] != 'Scripts':
-        print('Run train.py from Scripts Directory')        
+        print('Run driver.py from Scripts Directory')        
     else:
         # Make the parent folder for this run
         os.mkdir(folder_name)

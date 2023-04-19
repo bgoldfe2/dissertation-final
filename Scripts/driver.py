@@ -3,7 +3,6 @@
 # CSI 999, George Mason University
 # Dec 27, 2022
 
-import os 
 import argparse
 import warnings
 import torch
@@ -14,17 +13,6 @@ from Model_Config import Model_Config
 
 # Suppress copious PyTorch warnings output
 warnings.filterwarnings("ignore")
-
-# Deprecated - old method of running training using command line with args
-# def train_all_models(): 
-#     list_scripts = ["--pretrained_model microsoft/deberta-v3-base", \
-#                     "--pretrained_model EleutherAI/gpt-neo-125M", \
-#                     "--pretrained_model roberta-base", \
-#                     "--pretrained_model xlnet-base-cased", \
-#                     "--pretrained_model albert-base-v2"] 
-    
-#     for script in list_scripts: 
-#         __ = os.system("python train.py --split 'no' " + script) 
 
 # New v2.0 - Uses state as defined in driver and passing with mutation capacity for args
 def train_all_models(my_args: Model_Config):
@@ -48,7 +36,7 @@ def get_parser():
     parser.add_argument("--train_batch_size", default=16, type=int,  help='Training batch size')
     parser.add_argument("--valid_batch_size", default=32, type=int,  help='Validation batch size')
     parser.add_argument("--test_batch_size", default=32, type=int,  help='Test batch size')
-    parser.add_argument("--epochs", default=1, type=int,  help='Number of training epochs')
+    parser.add_argument("--epochs", default=4, type=int,  help='Number of training epochs')
     parser.add_argument("-lr","--learning_rate", default=2e-5, type=float,  help='The learning rate to use')
     parser.add_argument("-wd","--weight_decay", default=1e-4, type=float,  help=' Decoupled weight decay to apply')
     parser.add_argument("--adamw_epsilon", default=1e-8, type=float,  help='AdamW epsilon for numerical stability')
