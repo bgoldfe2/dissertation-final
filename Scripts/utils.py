@@ -195,7 +195,9 @@ def calc_roc_auc(all_labels, all_logits, args, name=None, ):
     if(args.classes==6):
        attributes = ['Age', 'Ethnicity', 'Gender', 'Notcb', 'Others', 'Religion']
     elif(args.classes==5):
-        attributes = ['Age', 'Ethnicity', 'Gender', 'Religion', 'Others',]
+        #attributes = ['Age', 'Ethnicity', 'Gender', 'Religion', 'Others',]
+        attributes = ['Age', 'Ethnicity', 'Gender', 'Religion', 'Others']
+
     elif(args.classes==3):
         attributes = ['None', 'Sexism', 'Racism']
     all_labels = oneHot(all_labels)

@@ -185,7 +185,7 @@ def create_dataset_files(args):
             df = df.drop(indexnames , inplace=False)
             df = df.reset_index()
             df.loc[df['target']==5, "target"] = 3
-        print(len(df))
+        print("This is the length of df in FIVE ",len(df))
     elif args.dataset == "Twitter":
         df = pd.read_csv(f'{args.dataset_path}twitter_dataset.csv').dropna()
 
