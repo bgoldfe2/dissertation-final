@@ -10,6 +10,8 @@ import utils
 import numpy as np
 from train import run
 from Model_Config import Model_Config
+from evaluate import evaluate_all_models
+from ensemble import averaging
 
 # Suppress copious PyTorch warnings output
 warnings.filterwarnings("ignore")
@@ -96,3 +98,5 @@ if __name__=="__main__":
 
     print("args type in driver main after create_folders ", type(args))
     train_all_models(args)
+    evaluate_all_models(args)
+    averaging(args)

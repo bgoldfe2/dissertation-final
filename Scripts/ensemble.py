@@ -132,7 +132,7 @@ def rocauc(args):
     
 
 def averaging(args):
-    deberta, xlnet, roberta, albert, gptneo = load_models()
+    deberta, xlnet, roberta, albert, gptneo, gptneo13 = load_models()
     test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
     device = set_device()
 
@@ -159,6 +159,11 @@ def averaging(args):
     gptneo.to(device)
     test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-125M", df=test_df)
     gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-125M")
+    del gptneo, test_data_loader
+
+    gptneo13.to(device)
+    test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-1.3B", df=test_df)
+    gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-1.3B")
     del gptneo, test_data_loader
     
     print(deberta_output)

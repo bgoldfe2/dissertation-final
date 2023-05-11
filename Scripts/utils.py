@@ -5,7 +5,7 @@ from sklearn.metrics import confusion_matrix, classification_report, matthews_co
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc
 
-from model import DeBertaFGBC#, RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, GPT_Neo13FGBC
+from model import DeBertaFGBC, RobertaFGBC, XLNetFGBC, AlbertFGBC, GPT_NeoFGBC, GPT_Neo13FGBC
 from dataset import DatasetDeberta, DatasetRoberta, DatasetXLNet, DatasetAlbert, DatasetGPT_Neo, DatasetGPT_Neo13
 
 import os
@@ -113,7 +113,7 @@ def load_prediction(args):
 def print_stats(max_vote_df, deberta, xlnet, roberta, albert):
     print(max_vote_df.head())
     print(f'---Ground Truth---\n{deberta.target.value_counts()}')
-    print(f'---Bert---\n{deberta.y_pred.value_counts()}')
+    print(f'---DeBerta---\n{deberta.y_pred.value_counts()}')
     print(f'---XLNet---\n{xlnet.y_pred.value_counts()}')
     print(f'---Roberta---\n{roberta.y_pred.value_counts()}')
     print(f'---albert---\n{albert.y_pred.value_counts()}')
@@ -183,7 +183,7 @@ def load_models(args):
     gpt_neo.load_state_dict(torch.load(gpt_neo_path))
     gpt_neo13.load_state_dict(torch.load(gpt_neo13_path))
 
-    return deberta, xlnet, roberta, albert, gpt_neo
+    return deberta, xlnet, roberta, albert, gpt_neo, gpt_neo13
 
 def oneHot(arr):
     b = np.zeros((arr.size, arr.max()+1))
