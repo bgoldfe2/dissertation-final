@@ -5,3 +5,4 @@ Scripts/__pycache__/
 Dataset/*.*
 Models/*.csv
 Paper\ Figures/
+Runs/

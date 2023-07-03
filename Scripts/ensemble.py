@@ -124,8 +124,8 @@ def rocauc(args):
     del albert, test_data_loader
 
     gptneo.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-125M", df=test_df)
-    y_pred, y_test, y_proba = test_eval_fn(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-125M")
+    test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-125m", df=test_df)
+    y_pred, y_test, y_proba = test_eval_fn(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-125m")
     calc_roc_auc(np.array(y_test), np.array(y_proba), name='GPTNEO')
     del gptneo, test_data_loader
     
@@ -157,8 +157,8 @@ def averaging(args):
     del albert, test_data_loader
     # BHG a lot of extra code in here?
     gptneo.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-125M", df=test_df)
-    gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-125M")
+    test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-125m", df=test_df)
+    gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-125m")
     del gptneo, test_data_loader
 
     gptneo13.to(device)
@@ -219,8 +219,8 @@ def averaging3(args):
     
 
     gptneo.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-125M", df=test_df)
-    gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-125M")
+    test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-125m", df=test_df)
+    gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-125m")
     del gptneo, test_data_loader
     
     output1 = np.add(gptneo_output, xlnet_output)

@@ -124,7 +124,7 @@ def test_eval_fn_ensemble(data_loader, model, device, args):
 def generate_output(data, model, device, args: Model_Config):
     pretrained_model = args.pretrained_model
     if(pretrained_model == "roberta-base" or pretrained_model == "albert-base-v2" \
-          or pretrained_model == "EleutherAI/gpt-neo-125M" or pretrained_model == "microsoft/deberta-v3-base") \
+          or pretrained_model == "EleutherAI/gpt-neo-125m" or pretrained_model == "microsoft/deberta-v3-base") \
             or pretrained_model == "EleutherAI/gpt-neo-1.3B":
             input_ids = data["input_ids"]
             attention_mask = data["attention_mask"]

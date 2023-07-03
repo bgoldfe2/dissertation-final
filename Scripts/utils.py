@@ -99,7 +99,7 @@ def load_prediction(args):
     xlnet_path = (f'{args.output_path}xlnet-base-cased.csv')
     roberta_path = (f'{args.output_path}roberta-base.csv')
     albert_path = (f'{args.output_path}albert-base-v2.csv')
-    gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-125M.csv')
+    gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-125m.csv')
     gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-1.3B.csv')
 
     deberta = pd.read_csv(deberta_path)
@@ -139,19 +139,19 @@ def evaluate_ensemble(max_vote_df, args):
     conf_mat = confusion_matrix(y_test,y_pred)
     print(conf_mat)
 
-def generate_dataset_for_ensembling(pretrained_model, df, args):
-    if(pretrained_model == "microsoft/deberta-v3-base"):
-        dataset = DatasetDeberta(text=df.text.values, target=df.target.values, pretrained_model="microsoft/deberta-v3-base")
-    elif(pretrained_model== "roberta-base"):
-        dataset = DatasetRoberta(text=df.text.values, target=df.target.values, pretrained_model="roberta-base")
-    elif(pretrained_model== "xlnet-base-cased"):
-        dataset = DatasetXLNet(text=df.text.values, target=df.target.values, pretrained_model="xlnet-base-cased")
-    elif(pretrained_model == "albert-base-v2"):
-        dataset = DatasetAlbert(text=df.text.values, target=df.target.values, pretrained_model="albert-base-v2")
-    elif(pretrained_model == "EleutherAI/gpt-neo-125M"):
-        dataset = DatasetGPT_Neo(text=df.text.values, target=df.target.values, pretrained_model="EleutherAI/gpt-neo-125M")
-    elif(pretrained_model == "EleutherAI/gpt-neo-1.3M"):
-        dataset = DatasetGPT_Neo13(text=df.text.values, target=df.target.values, pretrained_model="EleutherAI/gpt-neo-1.3B")
+def generate_dataset_for_ensembling(args, df):
+    if(args.pretrained_model == "microsoft/deberta-v3-base"):
+        dataset = DatasetDeberta(args, text=df.text.values, target=df.target.values)
+    elif(args.pretrained_model== "roberta-base"):
+        dataset = DatasetRoberta(args, text=df.text.values, target=df.target.values)
+    elif(args.pretrained_model== "xlnet-base-cased"):
+        dataset = DatasetXLNet(args, text=df.text.values, target=df.target.values)
+    elif(args.pretrained_model == "albert-base-v2"):
+        dataset = DatasetAlbert(args, text=df.text.values, target=df.target.values)
+    elif(args.pretrained_model == "EleutherAI/gpt-neo-125m"):
+        dataset = DatasetGPT_Neo(args, text=df.text.values, target=df.target.values)
+    elif(args.pretrained_model == "EleutherAI/gpt-neo-1.3m"):
+        dataset = DatasetGPT_Neo13(args, text=df.text.values, target=df.target.values)
 
     data_loader = torch.utils.data.DataLoader(
         dataset = dataset,
@@ -161,29 +161,44 @@ def generate_dataset_for_ensembling(pretrained_model, df, args):
 
     return data_loader
 
-def load_models(args):
+def load_models(args: Model_Config):
     deberta_path = (f'{args.model_path}microsoft/deberta-v3-base_Best_Val_Acc.bin')
     xlnet_path = (f'{args.model_path}xlnet-base-cased_Best_Val_Acc.bin')
     roberta_path = (f'{args.model_path}roberta-base_Best_Val_Acc.bin')
     albert_path = (f'{args.model_path}albert-base-v2_Best_Val_Acc.bin')
-    gpt_neo_path = (f'{args.model_path}EleutherAI/gpt-neo-125M_Best_Val_Acc.bin')
-    gpt_neo13_path = (f'{args.model_path}EleutherAI/gpt-neo-1.3B_Best_Val_Acc.bin')
+    gpt_neo_path = (f'{args.model_path}EleutherAI/gpt-neo-125m_Best_Val_Acc.bin')
+    #gpt_neo13_path = (f'{args.model_path}EleutherAI/gpt-neo-1.3B_Best_Val_Acc.bin')
 
-    deberta = DeBertaFGBC(pretrained_model="microsoft/deberta-v3-base")
-    xlnet = XLNetFGBC(pretrained_model="xlnet-base-cased")
-    roberta = RobertaFGBC(pretrained_model="roberta-base")
-    albert = AlbertFGBC(pretrained_model="albert-base-v2")
-    gpt_neo = GPT_NeoFGBC(pretrained_model="EleutherAI/gpt-neo-125M")
-    gpt_neo13 = GPT_Neo13FGBC(pretrained_model="EleutherAI/gpt-neo-1.3B")
+    # TODO this is where the dynamic number of models can be put
+    #      currently just hardcoded
+    
+    args.pretrained_model="microsoft/deberta-v3-base"
+    deberta = DeBertaFGBC(args)
 
+    args.pretrained_model="xlnet-base-cased"
+    xlnet = XLNetFGBC(args)
+
+    args.pretrained_model="roberta-base"
+    roberta = RobertaFGBC(args)
+
+    args.pretrained_model="albert-base-v2"
+    albert = AlbertFGBC(args)
+
+    args.pretrained_model="EleutherAI/gpt-neo-125m"
+    gpt_neo = GPT_NeoFGBC(args)
+
+    #args.pretrained_model="xlnet-base-cased"
+    #gpt_neo13 = GPT_Neo13FGBC(pretrained_model="EleutherAI/gpt-neo-1.3B")
+
+    print(deberta_path)
     deberta.load_state_dict(torch.load(deberta_path))
     xlnet.load_state_dict(torch.load(xlnet_path))
     roberta.load_state_dict(torch.load(roberta_path))
     albert.load_state_dict(torch.load(albert_path))
     gpt_neo.load_state_dict(torch.load(gpt_neo_path))
-    gpt_neo13.load_state_dict(torch.load(gpt_neo13_path))
+    #gpt_neo13.load_state_dict(torch.load(gpt_neo13_path))
 
-    return deberta, xlnet, roberta, albert, gpt_neo, gpt_neo13
+    return deberta, xlnet, roberta, albert, gpt_neo #, gpt_neo13
 
 def oneHot(arr):
     b = np.zeros((arr.size, arr.max()+1))

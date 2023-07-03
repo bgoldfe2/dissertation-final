@@ -43,7 +43,7 @@ def get_parser():
     parser.add_argument("-wd","--weight_decay", default=1e-4, type=float,  help=' Decoupled weight decay to apply')
     parser.add_argument("--adamw_epsilon", default=1e-8, type=float,  help='AdamW epsilon for numerical stability')
     parser.add_argument("--warmup_steps", default=0, type=int,  help='The number of steps for the warmup phase.')
-    parser.add_argument("--classes", default=5, type=int, help='Number of output classes')
+    parser.add_argument("--classes", default=6, type=int, help='Number of output classes')
     parser.add_argument("--dropout", type=float, default=0.2, help="dropout")
     parser.add_argument("--seed", type=int, default=42, help="Seed for reproducibility")
     parser.add_argument("--device", type=str, default="gpu", help="Training device - cpu/gpu")
@@ -72,6 +72,7 @@ def get_parser():
 if __name__=="__main__":
 
     # Parse command line arguments and defaults
+    # This is being deprecated to the Model_Config class
     parser = get_parser()
     raw_args = parser.parse_args()
 
@@ -81,7 +82,7 @@ if __name__=="__main__":
     torch.cuda.manual_seed(raw_args.seed)
     
     # Declare the model list
-    model_list = ['microsoft/deberta-v3-base', 'EleutherAI/gpt-neo-125M', 'roberta-base',\
+    model_list = ['microsoft/deberta-v3-base', 'EleutherAI/gpt-neo-125m', 'roberta-base',\
                     'xlnet-base-cased', 'albert-base-v2']
     
     #model_list = ['microsoft/deberta-v3-base']
@@ -92,11 +93,14 @@ if __name__=="__main__":
     my_args = utils.create_folders(args)
 
     # Test the Five Class run
-    args.classes = 5
-    args.dataset_path = "../Dataset/FiveClass/"
+    args.classes = 6
+    args.dataset_path = "../Dataset/SixClass/"
     #args.split = "yes"
 
     print("args type in driver main after create_folders ", type(args))
     train_all_models(args)
-    evaluate_all_models(args)
-    averaging(args)
+    print("########################### TRAINING COMPLETE #########################################")
+    #evaluate_all_models(args)
+    print("############################ EVALUATION COMPLETE ######################################")
+    #averaging(args)
+    print("############################ ENSEMBLE COMPLETE ########################################")
