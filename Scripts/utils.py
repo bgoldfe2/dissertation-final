@@ -11,6 +11,7 @@ from dataset import DatasetDeberta, DatasetRoberta, DatasetXLNet, DatasetAlbert,
 import os
 from datetime import datetime
 from Model_Config import Model_Config
+from glob import glob
 
 class AverageMeter:
     """Computes and stores the average and current value"""
@@ -94,13 +95,26 @@ def set_device(args):
 def sorting_function(val):
     return val[1]    
 
+def get_output_results(args):
+    file_dict = {}
+    mod_list = args.model_list
+    for mod in mod_list:
+        dir_results = args.output_path + '*' + mod + '*'
+        result = glob(dir_results)[0]
+        file_dict[mod]=result
+    print(mod_list)
+    asdf
+
 def load_prediction(args):
+    
+    get_output_results(args)
+    
     deberta_path = (f'{args.output_path}microsoft/deberta_v3_base.csv')
     xlnet_path = (f'{args.output_path}xlnet-base-cased.csv')
     roberta_path = (f'{args.output_path}roberta-base.csv')
     albert_path = (f'{args.output_path}albert-base-v2.csv')
     gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-125m.csv')
-    gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-1.3B.csv')
+    #gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-1.3B.csv')
 
     deberta = pd.read_csv(deberta_path)
     xlnet = pd.read_csv(xlnet_path)
@@ -205,7 +219,8 @@ def oneHot(arr):
     b[np.arange(arr.size),arr] = 1
     return b
 
-def calc_roc_auc(all_labels, all_logits, args, name=None, ):
+def calc_roc_auc(all_labels, all_logits, args, name=None ):
+
     attributes = []
     if(args.classes==6):
        attributes = ['Age', 'Ethnicity', 'Gender', 'Notcb', 'Others', 'Religion']

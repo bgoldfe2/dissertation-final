@@ -11,10 +11,10 @@ from engine import test_eval_fn_ensemble, test_eval_fn
 
 from utils import sorting_function, evaluate_ensemble, print_stats, load_prediction, set_device, load_models, generate_dataset_for_ensembling, calc_roc_auc
 
-def max_vote():
+def max_vote(args):
     print(f'\n---Max voting ensemble---\n')
 
-    deberta, xlnet, roberta, albert, gptneo = load_prediction()
+    deberta, xlnet, roberta, albert, gptneo = load_prediction(args)
 
     target = []
     deberta_pred = []
@@ -100,71 +100,76 @@ def rocauc(args):
     device = set_device()
 
     deberta.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="microsoft/deberta-v3-base", df =test_df)
+    test_data_loader = generate_dataset_for_ensembling(args, df =test_df)
     y_pred, y_test, y_proba = test_eval_fn(test_data_loader, deberta, device, pretrained_model="microsoft/deberta-v3-base")
-    calc_roc_auc(np.array(y_test), np.array(y_proba), name='DEBERTA')
+    calc_roc_auc(np.array(y_test), np.array(y_proba), args, name='DEBERTA')
     del deberta, test_data_loader
 
     xlnet.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="xlnet-base-cased", df=test_df)
-    y_pred, y_test, y_proba = test_eval_fn(test_data_loader, xlnet, device, pretrained_model="xlnet-base-cased")
-    calc_roc_auc(np.array(y_test), np.array(y_proba), name='XLNet')
+    test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
+    y_pred, y_test, y_proba = test_eval_fn(test_data_loader, xlnet, device, args)
+    calc_roc_auc(np.array(y_test), np.array(y_proba), args, name='XLNet')
     del xlnet, test_data_loader
 
     roberta.to(device)
     test_data_loader = generate_dataset_for_ensembling(pretrained_model="roberta-base", df=test_df)
     y_pred, y_test, y_proba = test_eval_fn(test_data_loader, roberta, device, pretrained_model="roberta-base")
-    calc_roc_auc(np.array(y_test), np.array(y_proba), name='RoBERTa')
+    calc_roc_auc(np.array(y_test), np.array(y_proba), args, name='RoBERTa')
     del roberta, test_data_loader
 
     albert.to(device)
     test_data_loader = generate_dataset_for_ensembling(pretrained_model="albert-base-v2", df=test_df)
     y_pred, y_test, y_proba = test_eval_fn(test_data_loader, albert, device, pretrained_model="albert-base-v2")
-    calc_roc_auc(np.array(y_test), np.array(y_proba), name='albert')
+    calc_roc_auc(np.array(y_test), np.array(y_proba), args, name='albert')
     del albert, test_data_loader
 
     gptneo.to(device)
     test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-125m", df=test_df)
     y_pred, y_test, y_proba = test_eval_fn(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-125m")
-    calc_roc_auc(np.array(y_test), np.array(y_proba), name='GPTNEO')
+    calc_roc_auc(np.array(y_test), np.array(y_proba), args, name='GPTNEO')
     del gptneo, test_data_loader
     
     
 
 def averaging(args):
-    deberta, xlnet, roberta, albert, gptneo, gptneo13 = load_models()
+    deberta, xlnet, roberta, albert, gptneo = load_models(args)
     test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
-    device = set_device()
+    device = set_device(args)
 
     deberta.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="microsoft/deberta-v3-base", df =test_df)
-    deberta_output, target = test_eval_fn_ensemble(test_data_loader, deberta, device, pretrained_model="microsoft/deberta-v3-base")
+    args.pretrained_model="microsoft/deberta-v3-base"
+    test_data_loader = generate_dataset_for_ensembling(args, df =test_df)
+    deberta_output, target = test_eval_fn_ensemble(test_data_loader, deberta, device, args)
     del deberta, test_data_loader
 
     xlnet.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="xlnet-base-cased", df=test_df)
-    xlnet_output, target = test_eval_fn_ensemble(test_data_loader, xlnet, device, pretrained_model="xlnet-base-cased")
+    args.pretrained_model="xlnet-base-cased"
+    test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
+    xlnet_output, target = test_eval_fn_ensemble(test_data_loader, xlnet, device, args)
     del xlnet, test_data_loader
 
     roberta.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="roberta-base", df=test_df)
-    roberta_output, target = test_eval_fn_ensemble(test_data_loader, roberta, device, pretrained_model="roberta-base")
+    args.pretrained_model="roberta-base"
+    test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
+    roberta_output, target = test_eval_fn_ensemble(test_data_loader, roberta, device, args)
     del roberta, test_data_loader
 
     albert.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="albert-base-v2", df=test_df)
-    albert_output, target = test_eval_fn_ensemble(test_data_loader, albert, device, pretrained_model="albert-base-v2")
+    args.pretrained_model="albert-base-v2"
+    test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
+    albert_output, target = test_eval_fn_ensemble(test_data_loader, albert, device, args)
     del albert, test_data_loader
     # BHG a lot of extra code in here?
     gptneo.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-125m", df=test_df)
-    gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-125m")
+    args.pretrained_model="EleutherAI/gpt-neo-125m"
+    test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
+    gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, args)
     del gptneo, test_data_loader
 
-    gptneo13.to(device)
-    test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-1.3B", df=test_df)
-    gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-1.3B")
-    del gptneo, test_data_loader
+    #gptneo13.to(device)
+    #test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-1.3B", df=test_df)
+    #gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-1.3B")
+    #del gptneo, test_data_loader
     
     print(deberta_output)
     print(gptneo_output)
@@ -198,7 +203,7 @@ def averaging(args):
     conf_mat = confusion_matrix(y_test,y_pred)
     print(conf_mat)
     
-
+# TODO this method is for the three model variant used by prior implementors
 def averaging3(args):
     xlnet, roberta, gptneo = load_models()
     test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()

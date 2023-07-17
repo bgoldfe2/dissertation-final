@@ -111,7 +111,7 @@ def test_eval_fn_ensemble(data_loader, model, device, args):
 
     with torch.no_grad():
         for ii, data in enumerate(progress_bar):
-            output, target, input_ids = generate_output(data, model, device, pretrained_model=pretrained_model)
+            output, target, input_ids = generate_output(data, model, device, args)
 
             loss = loss_fn(output, target)
             output = torch.log_softmax(output, dim = 1)
