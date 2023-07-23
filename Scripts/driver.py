@@ -10,6 +10,8 @@ import utils
 import numpy as np
 from train import run
 from Model_Config import Model_Config
+from evaluate import evaluate_all_models
+from ensemble import averaging
 
 # Suppress copious PyTorch warnings output
 warnings.filterwarnings("ignore")
@@ -33,10 +35,10 @@ def get_parser():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument("--max_length", default=128, type=int,  help='Maximum number of words in a sample')
-    parser.add_argument("--train_batch_size", default=16, type=int,  help='Training batch size')
+    parser.add_argument("--train_batch_size", default=32, type=int,  help='Training batch size')
     parser.add_argument("--valid_batch_size", default=32, type=int,  help='Validation batch size')
     parser.add_argument("--test_batch_size", default=32, type=int,  help='Test batch size')
-    parser.add_argument("--epochs", default=4, type=int,  help='Number of training epochs')
+    parser.add_argument("--epochs", default=1, type=int,  help='Number of training epochs')
     parser.add_argument("-lr","--learning_rate", default=2e-5, type=float,  help='The learning rate to use')
     parser.add_argument("-wd","--weight_decay", default=1e-4, type=float,  help=' Decoupled weight decay to apply')
     parser.add_argument("--adamw_epsilon", default=1e-8, type=float,  help='AdamW epsilon for numerical stability')
@@ -70,6 +72,7 @@ def get_parser():
 if __name__=="__main__":
 
     # Parse command line arguments and defaults
+    # This is being deprecated to the Model_Config class
     parser = get_parser()
     raw_args = parser.parse_args()
 
@@ -79,7 +82,7 @@ if __name__=="__main__":
     torch.cuda.manual_seed(raw_args.seed)
     
     # Declare the model list
-    model_list = ['microsoft/deberta-v3-base', 'EleutherAI/gpt-neo-125M', 'roberta-base',\
+    model_list = ['microsoft/deberta-v3-base', 'EleutherAI/gpt-neo-125m', 'roberta-base',\
                     'xlnet-base-cased', 'albert-base-v2']
     
     #model_list = ['microsoft/deberta-v3-base']
@@ -89,6 +92,15 @@ if __name__=="__main__":
     args.model_list = model_list
     my_args = utils.create_folders(args)
 
+    # Test the Five Class run
+    args.classes = 6
+    args.dataset_path = "../Dataset/SixClass/"
+    #args.split = "yes"
 
     print("args type in driver main after create_folders ", type(args))
     train_all_models(args)
+    print("########################### TRAINING COMPLETE #########################################")
+    evaluate_all_models(args)
+    print("############################ EVALUATION COMPLETE ######################################")
+    averaging(args)
+    print("############################ ENSEMBLE COMPLETE ########################################")

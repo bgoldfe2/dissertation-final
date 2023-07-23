@@ -185,7 +185,7 @@ def create_dataset_files(args):
             df = df.drop(indexnames , inplace=False)
             df = df.reset_index()
             df.loc[df['target']==5, "target"] = 3
-        print(len(df))
+        print("This is the length of df in FIVE ",len(df))
     elif args.dataset == "Twitter":
         df = pd.read_csv(f'{args.dataset_path}twitter_dataset.csv').dropna()
 
@@ -199,7 +199,7 @@ def create_dataset_files(args):
 def generate_dataset(df, cur_args: Model_Config):
     if(cur_args.pretrained_model == "microsoft/deberta-v3-base"):
         return DatasetDeberta(text=df.text.values, target=df.target.values, args=cur_args)
-    elif(cur_args.pretrained_model == "EleutherAI/gpt-neo-125M"):
+    elif(cur_args.pretrained_model == "EleutherAI/gpt-neo-125m"):
         return DatasetGPT_Neo(text=df.text.values, target=df.target.values, args=cur_args)
     elif(cur_args.pretrained_model == "EleutherAI/gpt-neo-1.3B"):
         return DatasetGPT_Neo13(text=df.text.values, target=df.target.values, args=cur_args)
@@ -217,7 +217,7 @@ def set_model(args):
     
     if(args.pretrained_model == "microsoft/deberta-v3-base"):
         return DeBertaFGBC(args)
-    elif(args.pretrained_model == "EleutherAI/gpt-neo-125M"):
+    elif(args.pretrained_model == "EleutherAI/gpt-neo-125m"):
         return GPT_NeoFGBC(args)
     elif(args.pretrained_model == "EleutherAI/gpt-neo-1.3B"):
         return GPT_Neo13FGBC(args)

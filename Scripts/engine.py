@@ -29,6 +29,8 @@ def train_fn(data_loader, model, optimizer, device, scheduler, args: Model_Confi
         output, target, input_ids = generate_output(data, model, device, args)
 
         loss = loss_fn(output, target)
+        #print("loss type is ", type(loss))
+        #print("loss printed is ", loss)
         train_losses.append(loss.item())
         output = torch.log_softmax(output, dim = 1)
         output = torch.argmax(output, dim = 1)
@@ -109,7 +111,7 @@ def test_eval_fn_ensemble(data_loader, model, device, args):
 
     with torch.no_grad():
         for ii, data in enumerate(progress_bar):
-            output, target, input_ids = generate_output(data, model, device, pretrained_model=pretrained_model)
+            output, target, input_ids = generate_output(data, model, device, args)
 
             loss = loss_fn(output, target)
             output = torch.log_softmax(output, dim = 1)
@@ -122,11 +124,12 @@ def test_eval_fn_ensemble(data_loader, model, device, args):
 def generate_output(data, model, device, args: Model_Config):
     pretrained_model = args.pretrained_model
     if(pretrained_model == "roberta-base" or pretrained_model == "albert-base-v2" \
-          or pretrained_model == "EleutherAI/gpt-neo-125M" or pretrained_model == "microsoft/deberta-v3-base") \
+          or pretrained_model == "EleutherAI/gpt-neo-125m" or pretrained_model == "microsoft/deberta-v3-base") \
             or pretrained_model == "EleutherAI/gpt-neo-1.3B":
             input_ids = data["input_ids"]
             attention_mask = data["attention_mask"]
             target = data["target"]
+            #print("TARGET in generate output for loss fn ", target)
 
             input_ids = input_ids.to(device, dtype = torch.long)
             attention_mask = attention_mask.to(device, dtype = torch.long)

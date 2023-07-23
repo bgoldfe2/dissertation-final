@@ -41,3 +41,43 @@ def test_evaluate(test_df, test_data_loader, model, device, args: Model_Config):
 
     # Return the test results for saving in train.py
     return pred_test, acc
+
+def evaluate_all_models(args: Model_Config):
+    deberta, xlnet, roberta, albert, gpt_neo = load_models(args)
+    test_df = pd.read_csv(f'{args.dataset_path}test.csv').dropna()
+    device = set_device(args)
+
+    deberta.to(device)
+    args.pretrained_model="microsoft/deberta-v3-base"
+    test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
+    test_evaluate(test_df, test_data_loader, deberta, device, args)
+    del deberta, test_data_loader
+
+    xlnet.to(device)
+    args.pretrained_model="xlnet-base-cased"
+    test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
+    test_evaluate(test_df, test_data_loader, xlnet, device, args)
+    del xlnet, test_data_loader
+
+    roberta.to(device)
+    args.pretrained_model="roberta-base"
+    test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
+    test_evaluate(test_df, test_data_loader, roberta, device, args)
+    del roberta, test_data_loader
+
+    albert.to(device)
+    args.pretrained_model="albert-base-v2"
+    test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
+    test_evaluate(test_df, test_data_loader, albert, device, args)
+    del albert, test_data_loader
+
+    gpt_neo.to(device)
+    args.pretrained_model="EleutherAI/gpt-neo-125m"
+    test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
+    test_evaluate(test_df, test_data_loader, gpt_neo, device, args)
+    del gpt_neo, test_data_loader
+
+    # gpt_neo13.to(device)
+    # test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-1.3B", df=test_df)
+    # test_evaluate(test_df, test_data_loader, gpt_neo13, device, pretrained_model="EleutherAI/gpt-neo-1.3b")
+    # del gpt_neo13, test_data_loader

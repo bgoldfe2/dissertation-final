@@ -14,6 +14,7 @@ class DeBertaFGBC(nn.Module):
         self.linear = nn.Linear(args.deberta_hidden, 64)
         self.batch_norm = nn.LayerNorm(64)
         #self.drop2 = nn.Dropout(args.dropout)
+        print("in the model init num classes is ", args.classes)
         self.out = nn.Linear(64, args.classes)
 
     def forward(self, input_ids, attention_mask):

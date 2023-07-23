@@ -5,7 +5,7 @@ from transformers import AutoTokenizer
 
 
 class DatasetDeberta:
-    def __init__(self, text, target, args):
+    def __init__(self, args, text, target):
         pretrained_model = args.pretrained_model
         print("in dataset_deberta this is pretrained model ", pretrained_model)
         self.text = text
@@ -40,7 +40,7 @@ class DatasetDeberta:
 
 
 class DatasetGPT_Neo:
-    def __init__(self, text, target, args):
+    def __init__(self, args, text, target):
         pretrained_model = args.pretrained_model
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
@@ -72,7 +72,7 @@ class DatasetGPT_Neo:
         }
 
 class DatasetGPT_Neo13:
-    def __init__(self, text, target, args):
+    def __init__(self, args, text, target):
         pretrained_model = args.pretrained_model
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
@@ -104,7 +104,7 @@ class DatasetGPT_Neo13:
         }
 
 class DatasetRoberta:
-    def __init__(self, text, target, args):
+    def __init__(self, args, text, target):
         pretrained_model = args.pretrained_model
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
@@ -135,7 +135,7 @@ class DatasetRoberta:
         }
 
 class DatasetAlbert:
-    def __init__(self, text, target, args):
+    def __init__(self, args, text, target):
         pretrained_model = args.pretrained_model
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
@@ -166,7 +166,7 @@ class DatasetAlbert:
         }
 
 class DatasetXLNet:
-    def __init__(self, text, target, args):
+    def __init__(self, args, text, target):
         pretrained_model = args.pretrained_model
         self.text = text
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
