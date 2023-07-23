@@ -50,7 +50,8 @@ def max_vote(args):
         
     max_vote_df['pred'] = preds
 
-    evaluate_ensemble(max_vote_df)
+    print("In max_vote going to evaluate_ensemble")
+    evaluate_ensemble(max_vote_df, args)
     
 def max_vote3():
     print(f'\n---Max voting ensemble for the best three classifiers---\n')

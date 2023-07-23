@@ -95,33 +95,59 @@ def set_device(args):
 def sorting_function(val):
     return val[1]    
 
-def get_output_results(args):
-    file_dict = {}
+def get_output_results(args)->dict[str, str]:
+    file_dict = dict()
     mod_list = args.model_list
     for mod in mod_list:
         dir_results = args.output_path + '*' + mod + '*'
         result = glob(dir_results)[0]
         file_dict[mod]=result
     print(mod_list)
-    asdf
+    print(file_dict)
+    return file_dict
 
 def load_prediction(args):
-    
-    get_output_results(args)
-    
-    deberta_path = (f'{args.output_path}microsoft/deberta_v3_base.csv')
-    xlnet_path = (f'{args.output_path}xlnet-base-cased.csv')
-    roberta_path = (f'{args.output_path}roberta-base.csv')
-    albert_path = (f'{args.output_path}albert-base-v2.csv')
-    gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-125m.csv')
-    #gpt_neo_path = (f'{args.output_path}EleutherAI/gpt-neo-1.3B.csv')
 
+    # TODO in future this needs to be a loop not repeated code
+    
+    file_map = get_output_results(args)
+    
+    #print(type(file_map))
+    search_key = 'deberta'
+    deberta_path = [val for key, val in file_map.items() if search_key in key][0]
+    #print(deberta_path)
     deberta = pd.read_csv(deberta_path)
+    #print(deberta.shape)
+    #print(deberta.head())
+    
+    search_key= 'xlnet'
+    xlnet_path = [val for key, val in file_map.items() if search_key in key][0]
+    #print(xlnet_path)
     xlnet = pd.read_csv(xlnet_path)
+    #print(xlnet.shape)
+    #print(xlnet.head())
+        
+    search_key= 'roberta'
+    roberta_path = [val for key, val in file_map.items() if search_key in key][0]
+    #print(roberta_path)
     roberta = pd.read_csv(roberta_path)
+    #print(roberta.shape)
+    #print(roberta.head())
+    
+    search_key= 'albert'
+    albert_path = [val for key, val in file_map.items() if search_key in key][0]
+    #print(albert_path)
     albert = pd.read_csv(albert_path)
+    #print(albert.shape)
+    #print(albert.head())
+    
+    search_key= 'gpt-neo'
+    gpt_neo_path = [val for key, val in file_map.items() if search_key in key][0]
+    #print(gpt_neo_path)
     gpt_neo = pd.read_csv(gpt_neo_path)
-
+    #print(gpt_neo.shape)
+    #print(gpt_neo.head())
+    
     return deberta, xlnet, roberta, albert, gpt_neo
 
 def print_stats(max_vote_df, deberta, xlnet, roberta, albert):
