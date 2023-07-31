@@ -13,6 +13,8 @@ from datetime import datetime
 from Model_Config import Model_Config
 from glob import glob
 
+os.chdir("/home/bruce/dev/dissertation-final/Scripts")
+
 class AverageMeter:
     """Computes and stores the average and current value"""
     def __init__(self):
@@ -229,6 +231,8 @@ def load_models(args: Model_Config):
 
     #args.pretrained_model="xlnet-base-cased"
     #gpt_neo13 = GPT_Neo13FGBC(pretrained_model="EleutherAI/gpt-neo-1.3B")
+
+
 
     print(deberta_path)
     deberta.load_state_dict(torch.load(deberta_path))

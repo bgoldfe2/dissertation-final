@@ -10,7 +10,7 @@ def test_eval(args: Model_Config):
 
 def test_average_ensemble(args):
 
-    averaging(args)
+    return averaging(args)
 
 def test_max_vote(args):
 
@@ -49,7 +49,9 @@ if __name__=="__main__":
     #test_eval(args)
 
     # Test the averaging() function in ensembles.py
-    #test_average_ensemble(args)
+    avg_rst = test_average_ensemble(args)
+    print(type(avg_rst))
+    print(avg_rst)
 
     # Test the max_vote() function in ensembles.py
-    test_max_vote(args)
+    #test_max_vote(args)

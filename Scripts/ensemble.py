@@ -171,6 +171,9 @@ def averaging(args):
     #test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-1.3B", df=test_df)
     #gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-1.3B")
     #del gptneo, test_data_loader
+
+    # Create Averaging-Ensemble dictionary and store the results
+    avg_ens_results = {}
     
     print(deberta_output)
     print(gptneo_output)
@@ -182,8 +185,13 @@ def averaging(args):
     output = (np.divide(output,5.0))
     output = np.argmax(output, axis=1)
 
+    # Results for test (truth) and predicted (inference)
     y_test = target
     y_pred = output
+    avg_ens_results.update({
+    "test": y_test,
+    "pred": y_pred
+    })
     
     print(f'\n---Probability averaging ensemble---\n')
     acc = accuracy_score(y_test, y_pred)
@@ -191,6 +199,14 @@ def averaging(args):
     precision = precision_score(y_test, y_pred, average='weighted')
     recall = recall_score(y_test, y_pred, average='weighted')
     f1 = f1_score(y_test, y_pred, average='weighted')
+
+    avg_ens_results.update({
+        "Accuracy": acc,
+        "matthews_corrcoef": mcc,
+        "precision": precision,
+        "recall": recall,
+        "f1": f1
+    })
     
     print('Accuracy:', acc)
     print('Mcc Score:', mcc)
@@ -203,6 +219,11 @@ def averaging(args):
 
     conf_mat = confusion_matrix(y_test,y_pred)
     print(conf_mat)
+    avg_ens_results.update({
+        "conf_mat": conf_mat
+    })
+
+    return avg_ens_results
     
 # TODO this method is for the three model variant used by prior implementors
 def averaging3(args):
