@@ -1,3 +1,8 @@
+# name: Bruce Goldfeder
+# class: CSI 999
+# university: George Mason University
+# date: July 23, 2023
+
 import torch
 import torch.nn as nn
 #from tqdm import tqdm
@@ -123,9 +128,9 @@ def test_eval_fn_ensemble(data_loader, model, device, args):
 
 def generate_output(data, model, device, args: Model_Config):
     pretrained_model = args.pretrained_model
-    if(pretrained_model == "roberta-base" or pretrained_model == "albert-base-v2" \
-          or pretrained_model == "EleutherAI/gpt-neo-125m" or pretrained_model == "microsoft/deberta-v3-base") \
-            or pretrained_model == "EleutherAI/gpt-neo-1.3B":
+    if(pretrained_model == "roberta-large" or pretrained_model == "albert-large-v2"  or pretrained_model == "albert-xxlarge-v2"\
+          or pretrained_model == "EleutherAI/gpt-neo-125m" or pretrained_model == "microsoft/deberta-v3-large") \
+            or pretrained_model == "EleutherAI/gpt-neo-1.3B" or pretrained_model == "albert-xxlarge-v2":
             input_ids = data["input_ids"]
             attention_mask = data["attention_mask"]
             target = data["target"]
@@ -138,7 +143,7 @@ def generate_output(data, model, device, args: Model_Config):
             model.zero_grad()
 
             output = model(input_ids=input_ids, attention_mask = attention_mask)
-    elif(pretrained_model == "xlnet-base-cased"):
+    elif(pretrained_model == "xlnet-large-cased"):
         input_ids = data["input_ids"]
         attention_mask = data["attention_mask"]
         token_type_ids = data["token_type_ids"]

@@ -29,33 +29,42 @@ def train_all_models(my_args: Model_Config):
 
     for i in my_args.model_list:
         my_args.pretrained_model = i
+        if i == 'EleutherAI/gpt-neo-1.3B':
+            my_args.test_batch_size = 8
+            my_args.train_batch_size = 8
+            my_args.valid_batch_size = 8
+        else:
+            my_args.test_batch_size = 24
+            my_args.train_batch_size = 24
+            my_args.valid_batch_size = 24
         run(my_args)
 
 def get_parser():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument("--max_length", default=128, type=int,  help='Maximum number of words in a sample')
-    parser.add_argument("--train_batch_size", default=32, type=int,  help='Training batch size')
-    parser.add_argument("--valid_batch_size", default=32, type=int,  help='Validation batch size')
-    parser.add_argument("--test_batch_size", default=32, type=int,  help='Test batch size')
-    parser.add_argument("--epochs", default=1, type=int,  help='Number of training epochs')
+    parser.add_argument("--train_batch_size", default=8, type=int,  help='Training batch size')
+    parser.add_argument("--valid_batch_size", default=8, type=int,  help='Validation batch size')
+    parser.add_argument("--test_batch_size", default=8, type=int,  help='Test batch size')
+    parser.add_argument("--epochs", default=5, type=int,  help='Number of training epochs')
     parser.add_argument("-lr","--learning_rate", default=2e-5, type=float,  help='The learning rate to use')
     parser.add_argument("-wd","--weight_decay", default=1e-4, type=float,  help=' Decoupled weight decay to apply')
     parser.add_argument("--adamw_epsilon", default=1e-8, type=float,  help='AdamW epsilon for numerical stability')
     parser.add_argument("--warmup_steps", default=0, type=int,  help='The number of steps for the warmup phase.')
     parser.add_argument("--classes", default=6, type=int, help='Number of output classes')
-    parser.add_argument("--dropout", type=float, default=0.2, help="dropout")
+    parser.add_argument("--dropout", type=float, default=0.3, help="dropout")
     parser.add_argument("--seed", type=int, default=42, help="Seed for reproducibility")
     parser.add_argument("--device", type=str, default="gpu", help="Training device - cpu/gpu")
     parser.add_argument("--dataset", type=str, default="FGBC", help="Select Dataset - FGBC/Twitter")
 
-    parser.add_argument("--pretrained_model", default="microsoft/deberta-v3-base", type=str, help='Name of the pretrained model')  
-    parser.add_argument("--deberta_hidden", default=768, type=int, help='Number of hidden states for DeBerta')
+    parser.add_argument("--pretrained_model", default="microsoft/deberta-v3-large", type=str, help='Name of the pretrained model')  
+    parser.add_argument("--deberta_hidden", default=1024, type=int, help='Number of hidden states for DeBerta')
     parser.add_argument("--gpt_neo_hidden", default=768, type=int, help='Number of hidden states for GPT_Neo')
     parser.add_argument("--gpt_neo13_hidden", default=2048, type=int, help='Number of hidden states for Albert')
-    parser.add_argument("--roberta_hidden", default=768, type=int, help='Number of hidden states for Roberta')
-    parser.add_argument("--xlnet_hidden", default=768, type=int, help='Number of hidden states for XLNet')
-    parser.add_argument("--albert_hidden", default=768, type=int, help='Number of hidden states for Albert')
+    parser.add_argument("--roberta_hidden", default=1024, type=int, help='Number of hidden states for Roberta')
+    parser.add_argument("--xlnet_hidden", default=1024, type=int, help='Number of hidden states for XLNet')
+    parser.add_argument("--albert_hidden", default=1024, type=int, help='Number of hidden states for Albert')
+    parser.add_argument("--albertxx_hidden", default=4096, type=int, help='Number of hidden states for Albert')
     parser.add_argument("--ensemble_type", type=str, default="max-voting", help="Ensemble type - max-voting or averaging")
 
     parser.add_argument("--run_path", default="../Runs/", type=str, help='Path to Run logs')
@@ -82,10 +91,10 @@ if __name__=="__main__":
     torch.cuda.manual_seed(raw_args.seed)
     
     # Declare the model list
-    model_list = ['microsoft/deberta-v3-base', 'EleutherAI/gpt-neo-125m', 'roberta-base',\
-                    'xlnet-base-cased', 'albert-base-v2']
+    #model_list = ['microsoft/deberta-v3-large', 'EleutherAI/gpt-neo-1.3B', 'roberta-large',\
+    #                'xlnet-large-cased', 'albert-xxlarge-v2']
     
-    #model_list = ['microsoft/deberta-v3-base']
+    model_list = ['albert-xxlarge-v2']
 
     # convert immutable args to python class instance and set up dynamic folder structure
     args = Model_Config(raw_args)

@@ -1,4 +1,13 @@
+# name: Bruce Goldfeder
+# class: CSI 999
+# university: George Mason University
+# date: July 23, 2023
+
+traits ={ '0': "Age", '1': "Ethnicity", '2': "Gender", '3': "Notcb", '4': "Others", '5': "Religion"}
+
 class Model_Config:
+
+
 
     def __init__(self, args):
         #parser = get_parser()
@@ -26,6 +35,7 @@ class Model_Config:
         self.roberta_hidden=args.roberta_hidden
         self.xlnet_hidden=args.xlnet_hidden
         self.albert_hidden=args.albert_hidden
+        self.albertxx_hidden=args.albertxx_hidden
         self.ensemble_type=args.ensemble_type
 
         self.run_path=args.run_path

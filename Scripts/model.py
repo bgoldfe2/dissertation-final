@@ -1,3 +1,8 @@
+# name: Bruce Goldfeder
+# class: CSI 999
+# university: George Mason University
+# date: July 23, 2023
+
 import torch
 import torch.nn as nn
 import numpy as np
@@ -68,7 +73,7 @@ class GPT_NeoFGBC(nn.Module):
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.gpt_neo_hidden, 64)
         self.batch_norm = nn.LayerNorm(64)
-        self.drop2 = nn.Dropout(args.dropout)
+        #self.drop2 = nn.Dropout(args.dropout)
         self.out = nn.Linear(64, args.classes)
 
     def forward(self, input_ids, attention_mask):
@@ -84,7 +89,7 @@ class GPT_NeoFGBC(nn.Module):
         bo = self.linear(bo)
         bo = self.batch_norm(bo)
         bo = nn.Tanh()(bo)
-        bo = self.drop2(bo)
+        #bo = self.drop2(bo)
 
         output = self.out(bo)
 
@@ -103,7 +108,7 @@ class GPT_Neo13FGBC(nn.Module):
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.gpt_neo13_hidden, 64)
         self.batch_norm = nn.LayerNorm(64)
-        self.drop2 = nn.Dropout(args.dropout)
+        #self.drop2 = nn.Dropout(args.dropout)
         self.out = nn.Linear(64, args.classes)
 
     def forward(self, input_ids, attention_mask):
@@ -119,7 +124,7 @@ class GPT_Neo13FGBC(nn.Module):
         bo = self.linear(bo)
         bo = self.batch_norm(bo)
         bo = nn.Tanh()(bo)
-        bo = self.drop2(bo)
+        #bo = self.drop2(bo)
 
         output = self.out(bo)
 
@@ -138,7 +143,7 @@ class RobertaFGBC(nn.Module):
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.roberta_hidden, 64)
         self.batch_norm = nn.LayerNorm(64)
-        self.drop2 = nn.Dropout(args.dropout)
+        #self.drop2 = nn.Dropout(args.dropout)
         self.out = nn.Linear(64, args.classes)
 
     def forward(self, input_ids, attention_mask):
@@ -152,19 +157,22 @@ class RobertaFGBC(nn.Module):
         bo = self.linear(bo)
         bo = self.batch_norm(bo)
         bo = nn.Tanh()(bo)
-        bo = self.drop2(bo)
+        #bo = self.drop2(bo)
 
         output = self.out(bo)
 
         return output
 
+# Use this one class and change hidden dimension based on albert size
 class AlbertFGBC(nn.Module):
     def __init__(self, args):
         super().__init__()
         pretrained_model = args.pretrained_model
         self.albert = AutoModel.from_pretrained(pretrained_model)
         self.drop1 = nn.Dropout(args.dropout)
-        self.linear = nn.Linear(args.albert_hidden, 64)
+        # change when using smaller albert models
+        #self.linear = nn.Linear(args.albert_hidden, 64)
+        self.linear = nn.Linear(args.albertxx_hidden, 64)
         self.batch_norm = nn.LayerNorm(64)
         self.drop2 = nn.Dropout(args.dropout)
         self.out = nn.Linear(64, args.classes)
@@ -201,7 +209,7 @@ class XLNetFGBC(nn.Module):
         self.drop1 = nn.Dropout(args.dropout)
         self.linear = nn.Linear(args.xlnet_hidden, 64)
         self.batch_norm = nn.LayerNorm(64)
-        self.drop2 = nn.Dropout(args.dropout)
+        #self.drop2 = nn.Dropout(args.dropout)
         self.out = nn.Linear(64, args.classes)
 
     def forward(self, input_ids, attention_mask, token_type_ids):
@@ -217,7 +225,7 @@ class XLNetFGBC(nn.Module):
         bo = self.linear(bo)
         bo = self.batch_norm(bo)
         bo = nn.Tanh()(bo)
-        bo = self.drop2(bo)
+        #bo = self.drop2(bo)
 
         output = self.out(bo)
 

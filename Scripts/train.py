@@ -1,3 +1,8 @@
+# name: Bruce Goldfeder
+# class: CSI 999
+# university: George Mason University
+# date: July 23, 2023
+
 import pandas as pd;
 import numpy as np;
 import torch
@@ -197,17 +202,19 @@ def create_dataset_files(args):
 
 
 def generate_dataset(df, cur_args: Model_Config):
-    if(cur_args.pretrained_model == "microsoft/deberta-v3-base"):
+    if(cur_args.pretrained_model == "microsoft/deberta-v3-large"):
         return DatasetDeberta(text=df.text.values, target=df.target.values, args=cur_args)
     elif(cur_args.pretrained_model == "EleutherAI/gpt-neo-125m"):
         return DatasetGPT_Neo(text=df.text.values, target=df.target.values, args=cur_args)
     elif(cur_args.pretrained_model == "EleutherAI/gpt-neo-1.3B"):
         return DatasetGPT_Neo13(text=df.text.values, target=df.target.values, args=cur_args)
-    elif(cur_args.pretrained_model== "roberta-base"):
+    elif(cur_args.pretrained_model== "roberta-large"):  # used to be base
         return DatasetRoberta(text=df.text.values, target=df.target.values, args=cur_args)
-    elif(cur_args.pretrained_model== "xlnet-base-cased"):
+    elif(cur_args.pretrained_model== "xlnet-large-cased"):
         return DatasetXLNet(text=df.text.values, target=df.target.values, args=cur_args)
-    elif(cur_args.pretrained_model == "albert-base-v2"):
+    elif(cur_args.pretrained_model == "albert-large-v2"):
+        return DatasetAlbert(text=df.text.values, target=df.target.values, args=cur_args)
+    elif(cur_args.pretrained_model == "albert-xxlarge-v2"):
         return DatasetAlbert(text=df.text.values, target=df.target.values, args=cur_args)
     
 
@@ -215,17 +222,19 @@ def set_model(args):
     # BHG debug
     print("The model in the args is ", args.pretrained_model)
     
-    if(args.pretrained_model == "microsoft/deberta-v3-base"):
+    if(args.pretrained_model == "microsoft/deberta-v3-large"):
         return DeBertaFGBC(args)
-    elif(args.pretrained_model == "EleutherAI/gpt-neo-125m"):
-        return GPT_NeoFGBC(args)
+    #elif(args.pretrained_model == "EleutherAI/gpt-neo-125m"):
+    #    return GPT_NeoFGBC(args)
     elif(args.pretrained_model == "EleutherAI/gpt-neo-1.3B"):
         return GPT_Neo13FGBC(args)
-    elif(args.pretrained_model == "roberta-base"):
+    elif(args.pretrained_model == "roberta-large"):
         return RobertaFGBC(args)
-    elif(args.pretrained_model == "xlnet-base-cased"):
+    elif(args.pretrained_model == "xlnet-large-cased"):
         return XLNetFGBC(args)
-    elif(args.pretrained_model == "albert-base-v2"):
+    elif(args.pretrained_model == "albert-large-v2"):
+        return AlbertFGBC(args)
+    elif(args.pretrained_model == "albert-xxlarge-v2"):
         return AlbertFGBC(args)
 
 def count_model_parameters(model):

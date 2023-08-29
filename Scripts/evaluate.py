@@ -1,3 +1,8 @@
+# name: Bruce Goldfeder
+# class: CSI 999
+# university: George Mason University
+# date: July 23, 2023
+
 from operator import index
 import numpy as np
 import torch
@@ -48,31 +53,31 @@ def evaluate_all_models(args: Model_Config):
     device = set_device(args)
 
     deberta.to(device)
-    args.pretrained_model="microsoft/deberta-v3-base"
+    args.pretrained_model="microsoft/deberta-v3-large"
     test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
     test_evaluate(test_df, test_data_loader, deberta, device, args)
     del deberta, test_data_loader
 
     xlnet.to(device)
-    args.pretrained_model="xlnet-base-cased"
+    args.pretrained_model="xlnet-large-cased"
     test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
     test_evaluate(test_df, test_data_loader, xlnet, device, args)
     del xlnet, test_data_loader
 
     roberta.to(device)
-    args.pretrained_model="roberta-base"
+    args.pretrained_model="roberta-large"
     test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
     test_evaluate(test_df, test_data_loader, roberta, device, args)
     del roberta, test_data_loader
 
     albert.to(device)
-    args.pretrained_model="albert-base-v2"
+    args.pretrained_model="albert-xxlarge-v2"
     test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
     test_evaluate(test_df, test_data_loader, albert, device, args)
     del albert, test_data_loader
 
     gpt_neo.to(device)
-    args.pretrained_model="EleutherAI/gpt-neo-125m"
+    args.pretrained_model="EleutherAI/gpt-neo-1.3B"
     test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
     test_evaluate(test_df, test_data_loader, gpt_neo, device, args)
     del gpt_neo, test_data_loader

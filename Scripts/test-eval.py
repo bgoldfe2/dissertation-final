@@ -1,3 +1,8 @@
+# name: Bruce Goldfeder
+# class: CSI 999
+# university: George Mason University
+# date: July 23, 2023
+
 from Model_Config import Model_Config
 
 from evaluate import evaluate_all_models
@@ -22,10 +27,10 @@ if __name__=="__main__":
     raw_args = parser.parse_args()
 
     # Declare the model list
-    model_list = ['microsoft/deberta-v3-base', 'EleutherAI/gpt-neo-125m', 'roberta-base',\
-                    'xlnet-base-cased', 'albert-base-v2']
+    model_list = ['microsoft/deberta-v3-large', 'EleutherAI/gpt-neo-1.3B', 'roberta-large',\
+                    'xlnet-large-cased', 'albert-xxlarge-v2']
     
-    #model_list = ['microsoft/deberta-v3-base']
+    #model_list = ['microsoft/deberta-v3-large']
     
     
     args = Model_Config(raw_args)
@@ -34,7 +39,7 @@ if __name__=="__main__":
     # TODO This is hardcoded to number of models needs to be made dynamic
     #      This will only work with all current five model runs
     # TODO currently hardcode this test run folder
-    run2test =  "2023-07-16_11_45_47--deberta-v3-base" #2023-07-03_14_53_05--deberta-v3-base"
+    run2test =  "2023-08-25_20_03_38--deberta-v3-large" #2023-07-03_14_53_05--deberta-v3-large"
     folder_name = "../Runs/" + run2test 
 
     # High level folders defined
