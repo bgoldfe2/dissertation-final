@@ -9,7 +9,8 @@ import torch
 import numpy as np
 from collections import Counter
 from sklearn.metrics import confusion_matrix, classification_report, matthews_corrcoef, f1_score, accuracy_score, precision_score, recall_score
-
+import math
+import csv
 
 from evaluate import test_evaluate
 from engine import test_eval_fn_ensemble, test_eval_fn
@@ -148,11 +149,19 @@ def averaging(args):
     deberta_output, target = test_eval_fn_ensemble(test_data_loader, deberta, device, args)
     del deberta, test_data_loader
 
+    with open("../Runs/2023-08-25_20_03_38--deberta-v3-large/Ensemble/deberta_out.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(deberta_output)
+
     xlnet.to(device)
     args.pretrained_model="xlnet-large-cased"
     test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
     xlnet_output, target = test_eval_fn_ensemble(test_data_loader, xlnet, device, args)
     del xlnet, test_data_loader
+
+    with open("../Runs/2023-08-25_20_03_38--deberta-v3-large/Ensemble/xlnet_out.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(xlnet_output)
 
     roberta.to(device)
     args.pretrained_model="roberta-large"
@@ -160,34 +169,42 @@ def averaging(args):
     roberta_output, target = test_eval_fn_ensemble(test_data_loader, roberta, device, args)
     del roberta, test_data_loader
 
+    with open("../Runs/2023-08-25_20_03_38--deberta-v3-large/Ensemble/roberta_out.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(roberta_output)
+
     albert.to(device)
     args.pretrained_model="albert-xxlarge-v2"
     test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
     albert_output, target = test_eval_fn_ensemble(test_data_loader, albert, device, args)
     del albert, test_data_loader
-    # BHG a lot of extra code in here?
+    
+    with open("../Runs/2023-08-25_20_03_38--deberta-v3-large/Ensemble/albert_out.csv", "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerows(albert_output)
+
     gptneo.to(device)
     args.pretrained_model="EleutherAI/gpt-neo-1.3B"
     test_data_loader = generate_dataset_for_ensembling(args, df=test_df)
     gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, args)
     del gptneo, test_data_loader
 
-    #gptneo13.to(device)
-    #test_data_loader = generate_dataset_for_ensembling(pretrained_model="EleutherAI/gpt-neo-1.3B", df=test_df)
-    #gptneo_output, target = test_eval_fn_ensemble(test_data_loader, gptneo, device, pretrained_model="EleutherAI/gpt-neo-1.3B")
-    #del gptneo, test_data_loader
+    with open("../Runs/2023-08-25_20_03_38--deberta-v3-large/Ensemble/gptneo_out.csv", "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerows(gptneo_output)
 
     # Create Averaging-Ensemble dictionary and store the results
     avg_ens_results = {}
-    
-    #print(deberta_output)
-    #print(gptneo_output)
+
     print('------------------------------')
     output1 = np.add(deberta_output, xlnet_output)
     output2 = np.add(roberta_output, albert_output)
     output = np.add(output1, output2)
     output = np.add(output, gptneo_output)
     output = (np.divide(output,5.0))
+    with open("../Runs/2023-08-25_20_03_38--deberta-v3-large/Ensemble/avg_out.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(output)
     output = np.argmax(output, axis=1)
 
     # Results for test (truth) and predicted (inference)
@@ -195,7 +212,7 @@ def averaging(args):
     y_pred = output
     avg_ens_results.update({
     "test": y_test,
-    "pred": y_pred
+    "pred": y_pred.tolist()
     })
     
     print(f'\n---Probability averaging ensemble---\n')
@@ -225,7 +242,7 @@ def averaging(args):
     conf_mat = confusion_matrix(y_test,y_pred)
     print(conf_mat)
     avg_ens_results.update({
-        "conf_mat": conf_mat
+        "conf_mat": conf_mat.tolist()
     })
 
     return avg_ens_results

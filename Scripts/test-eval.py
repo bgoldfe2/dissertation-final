@@ -8,6 +8,7 @@ from Model_Config import Model_Config
 from evaluate import evaluate_all_models
 from driver import get_parser
 from ensemble import averaging, max_vote
+import json
 
 def test_eval(args: Model_Config):
 
@@ -55,8 +56,14 @@ if __name__=="__main__":
 
     # Test the averaging() function in ensembles.py
     avg_rst = test_average_ensemble(args)
-    print(type(avg_rst))
+    #print(type(avg_rst))
     print(avg_rst)
+
+    # currently hard coded - can adjust to using current run if needed
+    with open("../Runs/2023-08-25_20_03_38--deberta-v3-large/Ensemble/avg_results.json", "w") as fp:
+        json.dump(avg_rst, fp)  # encode dict into JSON
+    
+    
 
     # Test the max_vote() function in ensembles.py
     #test_max_vote(args)
