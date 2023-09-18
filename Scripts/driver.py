@@ -16,6 +16,18 @@ from ensemble import averaging
 # Suppress copious PyTorch warnings output
 warnings.filterwarnings("ignore")
 
+# Kludge for onsite network
+import os
+import ssl
+os.environ['CURL_CA_BUNDLE'] = '/etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt'
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
+# End Kludge onsite network
+
 # New v2.0 - Uses state as defined in driver and passing with mutation capacity for args
 def train_all_models(my_args: Model_Config):
     # Use the run() method in train.py
